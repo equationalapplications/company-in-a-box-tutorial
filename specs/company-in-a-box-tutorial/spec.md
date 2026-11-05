@@ -70,11 +70,35 @@ kept identical by the link-check/consistency script), `LICENSE`, `README.md`,
 - Every external link targets a verified-live URL: curated-thoughts repo,
   curated-thoughts-integrations repo, hermes-agent repo, Hermes docs,
   synapsetree.dev, equationalapplications.com.
+- **Grounding mandate (Kurt, 2026-11-05):** every command, configuration
+  interface, and practice the tutorial teaches must be checked against the
+  tools' real docs/repos and EA's actual Tessera configuration before it is
+  written. Reviewers on the ladder are briefed to verify against the real
+  setup, not plausibility. Goals: accuracy, clearness, friendliness.
 - The worked example is honest: describes EA's real practice (memory sidecar,
   spec-driven delivery flow, review ladder, scheduled jobs) at the level a
   newcomer can copy; no secrets, no client material.
 - Plain-language voice; every EA/agent term defined at first use.
 - MIT license file ships (already on `main`); footer states MIT + attribution.
+
+### Analytics (Kurt ruling, 2026-11-05: option 1)
+
+- **GoatCounter** — cookieless visit counting, one small script on each page,
+  free tier (open-source/non-commercial site). No consent banner needed.
+- **Google Search Console** — ownership verified by a single HTML verification
+  file at the repo root; no page scripts.
+- GA4 explicitly rejected: heavy JS + cookie-consent baggage conflicts with
+  the site's privacy posture and design law 6.
+
+### Alignment with INTENT.md
+
+The spec serves INTENT.md directly: it operationalizes the central design
+intent (small bites, white space, few steps per page, infographics widely,
+overview-only landing — page map column "Teaches" and the design-law check
+enforce it), follows all seven rules (analytics choice honors rule 6; the
+grounding mandate implements rule 4), and respects every non-goal (no build
+step, no marketing content, no tool docs duplication). No departures from
+INTENT.md.
 
 ## Files touched
 
@@ -85,6 +109,7 @@ kept identical by the link-check/consistency script), `LICENSE`, `README.md`,
 - `css/style.css`
 - `.github/workflows/pages.yml`
 - `README.md`, `LICENSE` (license already on main; README added by this PR)
+- Search Console verification HTML file (repo root; added at implementation)
 
 ## Test plan
 
@@ -96,9 +121,11 @@ kept identical by the link-check/consistency script), `LICENSE`, `README.md`,
    with GET fallback); footer identical on all 11 pages (diff check).
 3. **Design-law check** — each non-landing page's numbered steps ≤ 5; each
    page contains at least one inline SVG where the page map promises one.
-4. **Visual check** — render each page in the local browser over CDP and
+4. **Analytics check** — the GoatCounter script appears exactly once per page
+   and is the only third-party script anywhere on the site.
+5. **Visual check** — render each page in the local browser over CDP and
    screenshot; confirm white space, readable hierarchy, SVGs render.
-5. **Deploy check** — Pages workflow run green on `main` after merge; the
+6. **Deploy check** — Pages workflow run green on `main` after merge; the
    published site URL serves all 11 pages (verify by fetching each).
 
 ## Open questions for Kurt
