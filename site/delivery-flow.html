@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The delivery flow — Company in a Box</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-topic="11">
+
+<header class="site-header">
+  <div class="inner">
+    <a class="brand" href="index.html">Company in a Box</a>
+    <nav>
+      <a href="index.html">Overview</a>
+      <a href="setup-hermes.html">Get started</a>
+      <a href="links.html">Links</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <h1>How work ships: the delivery flow</h1>
+  <p class="lead">This is the habit that turns agent output into finished
+  work: every change — every single one — flows through the same five-stage
+  pipe before it lands.</p>
+
+  <ol class="steps">
+    <li><strong>Spec.</strong> Write down the change first: the problem, the
+    evidence, the proposed fix, the files touched, and how it will be
+    tested. If the writing is hard, the change isn't understood yet.</li>
+    <li><strong>Plan.</strong> Break the spec into ordered steps small
+    enough to finish and check one at a time.</li>
+    <li><strong>Build.</strong> Execute the steps, committing each one.
+    Tests run from the first step, not at the end.</li>
+    <li><strong>Independent review.</strong> A reviewer who didn't write the
+    change reads it against the spec and reports findings. The author fixes
+    and re-runs the checks. No self-approval, ever.</li>
+    <li><strong>Merge.</strong> When checks pass and review converges, the
+    work lands — and the human owner gives the final go.</li>
+  </ol>
+
+  <figure>
+    <svg viewBox="0 0 560 120" role="img" aria-label="Delivery pipeline: spec, plan, build, review, merge">
+      <g font-family="system-ui" font-size="12" fill="#1f2430">
+        <rect x="20" y="35" width="88" height="46" rx="9" fill="#ffffff" stroke="#2f6f4f" stroke-width="2"/>
+        <text x="64" y="62" text-anchor="middle">spec</text>
+        <rect x="126" y="35" width="88" height="46" rx="9" fill="#ffffff" stroke="#2f6f4f" stroke-width="2"/>
+        <text x="170" y="62" text-anchor="middle">plan</text>
+        <rect x="232" y="35" width="88" height="46" rx="9" fill="#ffffff" stroke="#2f6f4f" stroke-width="2"/>
+        <text x="276" y="62" text-anchor="middle">build</text>
+        <rect x="338" y="35" width="88" height="46" rx="9" fill="#ffffff" stroke="#2f6f4f" stroke-width="2"/>
+        <text x="382" y="62" text-anchor="middle">review</text>
+        <rect x="444" y="35" width="96" height="46" rx="9" fill="#e7f1eb" stroke="#2f6f4f" stroke-width="2"/>
+        <text x="492" y="62" text-anchor="middle">merge</text>
+      </g>
+      <g stroke="#5a6272" stroke-width="2">
+        <line x1="108" y1="58" x2="126" y2="58"/><line x1="214" y1="58" x2="232" y2="58"/>
+        <line x1="320" y1="58" x2="338" y2="58"/><line x1="426" y1="58" x2="444" y2="58"/>
+      </g>
+      <text x="280" y="105" text-anchor="middle" font-family="system-ui" font-size="12" fill="#5a6272">the owner's go is the last gate — the human decides, the agents prepare</text>
+    </svg>
+    <figcaption>The pipe. Everything Equational Applications ships goes
+    through it — including this tutorial.</figcaption>
+  </figure>
+
+  <div class="aside">
+    <p><strong>Proof, not promises:</strong> you're looking at a product of
+    this exact flow. This tutorial exists as a written spec and plan, was
+    checked against the real documentation, went through independent review,
+    and ships only after its checks pass. The pattern works because the
+    agents must show their receipts.</p>
+  </div>
+
+  <p>One brain serves one person well. When a whole team needs to share it,
+  that's <a href="team-memory.html">the last step</a>.</p>
+
+  <div class="pager">
+    <a href="schedule.html">← Step 7: schedule jobs</a>
+    <span class="spacer"></span>
+    <a href="team-memory.html">Team memory →</a>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="inner">
+    <p>Made with ❤️ by <a href="https://equationalapplications.com">Equational Applications LLC</a>.</p>
+    <p>This tutorial is free and open source under the <a href="https://github.com/equationalapplications/company-in-a-box-tutorial/blob/main/LICENSE">MIT license</a>. Curated Thoughts, Curated Thoughts Integrations, and SynapseTree are also MIT-licensed open source.</p>
+    <p><a href="index.html">Overview</a> · <a href="links.html">All links</a> · <a href="https://github.com/equationalapplications/company-in-a-box-tutorial">Source code</a></p>
+  </div>
+</footer>
+
+</body>
+</html>
