@@ -20,7 +20,9 @@ import http.client
 import json
 import os
 import re
+import shutil
 import socket
+import subprocess
 import sys
 import urllib.error
 import urllib.request
@@ -205,8 +207,12 @@ def check_page(html5lib, path: Path, topic: str) -> str | None:
         if href.startswith(("http://", "https://", "mailto:", "#")) or not href:
             continue
         file_part, _, anchor = href.partition("#")
-        if file_part and not (SITE / file_part).exists():
-            fail(f"{path.name}: internal href '{href}' does not resolve")
+        if file_part:
+            resolved = (SITE / file_part).resolve()
+            if SITE.resolve() not in resolved.parents:
+                fail(f"{path.name}: internal href '{href}' escapes site/")
+            elif not resolved.exists():
+                fail(f"{path.name}: internal href '{href}' does not resolve")
         elif anchor and file_part:
             target_raw = (SITE / file_part).read_text(encoding="utf-8")
             if not re.search(rf'\sid=["\']{re.escape(anchor)}["\']', target_raw):
@@ -363,13 +369,10 @@ def main() -> int:
                 if pattern.search(text):
                     fail(f"{f.relative_to(REPO)}: possible secret — {label}")
 
-    # Optional gitleaks (mandatory in CI — spec: "any hit fails the check").
+    # gitleaks (mandatory in CI — spec: "any hit fails the check").
     # gitleaks exits 1 when it finds leaks, so ANY non-zero exit fails here.
-    import os
-    import shutil
     gitleaks = shutil.which("gitleaks")
     if gitleaks:
-        import subprocess
         # No report flags: default stdout output is stable across versions
         # (report formats changed between 8.28 and 8.30). gitleaks exits 1
         # when it finds leaks, so ANY non-zero exit fails here.
@@ -400,6 +403,8 @@ def main() -> int:
             elif result == "warn":
                 warn(f"external link warning: {url}")
         if advance_streak:
+            for stale in set(warn_counts) - urls:
+                warn_counts.pop(stale, None)  # prune URLs the site no longer links
             save_state(state)
 
     # Report

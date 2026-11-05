@@ -47,6 +47,8 @@ jobs:
         # runs every 3 days so the streak state stays warm.
       - name: Run site checker
         run: python tools/check_site.py --check-external
+      - name: Run checker unit tests
+        run: python tools/test_check_site.py
 
   deploy-boundary:
     # Post-deploy assertion: runs ONLY after a successful Pages deploy.
