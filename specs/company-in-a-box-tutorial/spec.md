@@ -1,8 +1,8 @@
 # Spec — company-in-a-box-tutorial static site
 
-Status: Draft (T1.5 ladder converged — APPROVE WITH NITS; T3 Opus findings
-folded; T4 Fable findings folded — heading to Fable delta verification,
-then Kurt's spec gate)
+Status: Draft (ladder complete: T1.5 converged APPROVE-WITH-NITS → T3 Opus
+folded → T4 Fable folded → Opus delta verification folded; awaiting Kurt's
+spec gate)
 Owner: Tessera — EA's executive agent (decision-log header: "Tessera is the
 model, not just the author"; naming sanctioned by D2/D8)
 Date: 2026-11-05
@@ -73,7 +73,8 @@ A post-deploy check asserts
 - Generous white space; no dense multi-column text walls.
 - Infographics used widely (one per page where the page map promises one).
 - No JavaScript required to learn from the site (analytics is a single
-  cookieless ~3.5KB script; a JS-free pixel is the documented fallback).
+  cookieless script (vendor-stated ~3.5KB); a JS-free pixel is the
+  documented fallback).
 
 ### Page map (13 pages + shared assets)
 
@@ -81,17 +82,17 @@ A post-deploy check asserts
 |---|------|---------|-------------|------------------|
 | 1 | `index.html` | Overview: what a company in a box is; why use it; where to start | Box diagram: you + memory + integrations + agent = a company | (links verified live) |
 | 2 | `the-pattern.html` | The pattern: one person directing agent roles (executive, workers, reviewers) | Org chart: you → executive agent → delegated workers | EA's real one-person org [built]; CTI INTENT.md "From one agent to a team" cited ONLY as a "where this is heading" aside [intent] |
-| 3 | `the-three-tools.html` | Meet the three tools, one glance each | Three-tool triangle feeding one company | CT INTENT.md cited ONLY for rules marked Built (e.g. one brain per vault); CTI INTENT.md is `[intent]` unless a README/CHANGELOG confirms the claim; Hermes docs [built] |
+| 3 | `the-three-tools.html` | Meet the three tools, one glance each | Three-tool triangle feeding one company | CT INTENT.md cited ONLY for rules marked Built (e.g. one brain per vault — "How changes are made"/"Who verifies" sections @ CT `33fb4fd70494`); CTI INTENT.md is `[intent]` unless a README/CHANGELOG confirms the claim; Hermes docs [built] |
 | 4 | `setup-hermes.html` | Install Hermes Agent and get a first response | Install flow: install → first conversation (profiles are an optional later step, not an install phase) | Hermes docs `getting-started/installation` + quickstart ("install to chatting in under 5 minutes" — profile NOT required; both 200, 2026-11-05) [built] + upstream-docs compat receipt |
 | 5 | `setup-memory.html` | Install Curated Thoughts (the brain-and-vault idea explained inline only as far as the install needs) | Brain/vault diagram: files → facts → recall | CT repo + EA's internal CT installation runbook (fact-check only) [built] |
 | 6 | `connect-memory.html` | Register the CT sidecar as the agent's MCP memory server | Agent ↔ sidecar ↔ vault wiring | CT repo + Hermes docs `user-guide/features/mcp` + `guides/use-mcp-with-hermes` (200, 2026-11-05) [built] |
 | 7 | `first-integration.html` | Install the CTI Hermes plugin so remembered facts arrive in the agent's context automatically | Plugin lifecycle diagram: session start → each message → facts injected | CTI repo `integrations/hermes/` (`plugin.yaml`, `integration.yaml`, `hooks/` — verified in-tree, 2026-11-05) [built] |
-| 8 | `procedures.html` | Give the company standing rules: the rule stack (INTENT.md → AGENTS.md → procedures → skills) | Rule stack diagram | INTENT/AGENTS pattern: CT + CTI repos [built]; skills: Hermes docs `user-guide/features/skills` + `user-guide/features/context-files` [built]; procedures: EA-internal, private fact-check only (no public equivalent) [built-in-EA, taught generically] |
+| 8 | `procedures.html` | Give the company standing rules: the rule stack (INTENT.md → AGENTS.md → procedures → skills) | Rule stack diagram | INTENT/AGENTS pattern: CT + CTI repos [built]; skills: Hermes docs `user-guide/features/skills` + `user-guide/features/context-files` (both 200, 2026-11-05) [built]; procedures: EA-internal, private fact-check only (no public equivalent) [built-in-EA, taught generically] |
 | 9 | `delegate.html` | Delegate work to agent subagents | Dispatch diagram | Hermes docs `user-guide/features/delegation` + `guides/delegation-patterns` (200, 2026-11-05) [built] |
 | 10 | `schedule.html` | Schedule recurring jobs | Clock diagram | Hermes docs `user-guide/features/cron` + `guides/automate-with-cron` (200, 2026-11-05) [built] |
-| 11 | `delivery-flow.html` | Run one delivery: spec → plan → build → independent review → merge | Delivery pipeline | One-PR flow: CT INTENT.md "How changes are made" §one-PR sentence ONLY (ct-INTENT.md:324-326) [built]; that section's named-model review sentence is STALE the same way CTI CONTRIBUTING is — do not cite either for the review step; review stage grounded on EA's real ladder via private fact-check (D2 allows showing it), taught generically as "independent review before merge" |
-| 12 | `team-memory.html` | Outgrow one brain: team AI memory at SynapseTree.dev | Local brain (one per person) → SynapseTree cloud hub → team's shared memory | SynapseTree's OWN product copy only, labeled as the product's description (cloud memory & sync hub; teams start with the MCP server; Free tier + Pro $29/mo — generally available, verified live 2026-11-05) [vendor-description]; page states plainly that local CT is one brain per vault (ct-INTENT.md:264) [built] and does NOT claim automatic local→cloud sync (CT's push path is checked at build against CT docs before any mention) |
-| 13 | `links.html` | The link directory: where everything lives | (Link list; icon accents only) | every target re-verified by the checker |
+| 11 | `delivery-flow.html` | Run one delivery: spec → plan → build → independent review → merge | Delivery pipeline | One-PR flow: CT INTENT.md "How changes are made" §one-PR sentence ONLY (section @ CT `33fb4fd70494`) [built]; that section's named-model review sentence is STALE the same way CTI CONTRIBUTING is — do not cite either for the review step; review stage grounded on EA's real ladder via private fact-check (D2 allows showing it), taught generically as "independent review before merge" |
+| 12 | `team-memory.html` | Outgrow one brain: team AI memory at SynapseTree.dev | Local brain (one per person) → SynapseTree cloud hub → team's shared memory | A POINTER page, not a vendor tutorial: describes SynapseTree as the hosted team-memory option per ITS OWN copy (cloud memory & sync hub; teams start with the MCP server) [vendor-description]; pricing is NEVER shown on the page — "see synapsetree.dev for plans" and link out (INTENT non-goal); page states plainly that local CT is one brain per vault ("Who verifies" section @ CT `33fb4fd70494`) [built] and does NOT claim automatic local→cloud sync (CT's push path checked at build against CT docs before any mention) |
+| 13 | `links.html` | The link directory: where everything lives | (Link list; icon accents only) | every target re-verified by the checker; the link list uses `ul` (unordered) so the ≤5-step rule counts nothing on this page |
 
 **Built-vs-intent rule (Opus T3 M2, extended per Fable M4):** every grounding
 source in the page map is marked `[built]` (behavior that exists today and
@@ -137,15 +138,19 @@ initialed at test time, with one row per page and four columns:
 2. **Redaction checked** — checkbox stated VERBATIM as the loosened rule:
    "no secrets, credentials, client material, or vault-internal paths; EA's
    real practice and agent identity may be shown" (D2/D8). Enforced
-   mechanically too: the checker greps `site/` for `/home/` paths,
-   `immutable-source-files`, and key/token patterns and fails on any hit.
+   mechanically too: the checker greps `site/` for `/home/`, `~/`,
+   `immutable-source-files`, `documents/equational-wiki` (case-insensitive),
+   plus gitleaks (pinned at implementation) for key/token patterns — any
+   hit fails the check.
 3. **Grounding receipts** — for every command, interface, AND practice claim
    on the page: the source (URL or repo file, or for private fact-checks the
    form "vault fact-check, date, checker" with no path) it was checked
    against, with the date checked. This is how INTENT.md rule 4 is enforced:
    no receipt, no sign-off. Pages 4/6/7/9/10 additionally carry a compat
    receipt: upstream-docs behavior confirmed against the version a newcomer
-   would install.
+   would install — **a found divergence BLOCKS that page's sign-off until
+   the page is reconciled to what EA actually runs or the divergent claim
+   is cut**.
 4. **Terms defined** — reviewer initials confirming every tool-specific term
    was defined at first use. INTENT.md rule 5 is enforced as recorded
    reviewer judgment here, not by a machine check.
@@ -266,13 +271,13 @@ full branch, not its current commits.
    13-row table confirming content matches its topic. The Alignment section
    therefore claims a machine-checked topic manifest PLUS a manual
    sign-off — not a fully automated guarantee.
-4. **Analytics check** — each manifest page contains EXACTLY ONE `<script>`
-   element and it is the GoatCounter tag; inline scripts, `on*` handlers,
-   and scripts inside SVGs all count and fail the check; non-manifest root
-   HTML files (e.g. the Search Console verification file) are asserted to
-   contain no `<script>` at all. The checker also FAILS while the
-   GoatCounter site code is still a placeholder (a placeholder tag must
-   never reach the live site). SRI pinning or self-hosting the counter
+4. **Analytics check** — each manifest page contains either ZERO `<script>`
+   elements (the pre-account state: no tag ships until a real GoatCounter
+   site code exists) or exactly one, and it is the GoatCounter tag; inline
+   scripts, `on*` handlers, and scripts inside SVGs all count and fail the
+   check (and a placeholder code ALWAYS fails); non-manifest root HTML
+   files (e.g. the Search Console verification file) are asserted to
+   contain no `<script>` at all. SRI pinning or self-hosting the counter
    script is decided at implementation.
 5. **Visual check** — render each page in the local browser over CDP and
    screenshot; confirm white space, readable hierarchy, SVGs render.
@@ -291,14 +296,17 @@ full branch, not its current commits.
 - **GoatCounter account** (m7): the analytics script needs an account and a
   site code (`https://<code>.goatcounter.com/count`). Who creates it — you,
   or shall I prepare everything and you just click the signup confirmation?
-  The script can be written and merged with a placeholder code until then.
+  Until then the site ships with ZERO scripts (the checker permits that
+  state); the tag lands in a small follow-up commit once the code exists —
+  no placeholder ever ships.
 - **Tessera naming confirmed open** (M4/D8): the spec treats Tessera as
   nameable (D2), and D8 now records that explicitly — shout if you want it
   otherwise.
-- **Sign-off table signer** (Fable m8): 52 manual cells (13 pages × 4
-  gates) need an accountable initial. Proposal: Tessera signs each row at
-  test time and YOU review the completed table at the merge gate — Kurt
-  initialing 52 cells is not sustainable. Confirm or override.
+- **Sign-off table signer** (Fable m8 + delta m5): 52 manual cells need an
+  accountable initial from someone OTHER than the page's author (self-sign
+  is not a gate). Proposal: a reviewer agent that didn't author the page
+  signs each row; you review the completed table at the merge gate.
+  Confirm or override.
 
 (Default decisions taken: repo name `company-in-a-box-tutorial` per approved
 option 1; Pages deployed from the `site/` directory via Actions; no custom
