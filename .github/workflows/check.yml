@@ -1,0 +1,45 @@
+name: Site checks
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "0 13 * * 1" # Mondays 13:00 UTC — link/topic maintenance (best-effort; GH disables schedules after 60d of inactivity)
+  workflow_run:
+    workflows: ["Deploy to GitHub Pages"]
+    types: [completed]
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    if: github.event_name != 'workflow_run'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install checker dependencies
+        run: pip install -r tools/requirements-dev.txt
+      - name: Run site checker
+        run: python tools/check_site.py --check-external
+
+  deploy-boundary:
+    # Post-deploy assertion: runs ONLY after a successful Pages deploy.
+    if: >-
+      github.event_name == 'workflow_run' &&
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_branch == 'main'
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Assert deployed site serves pages, not repo docs
+        run: |
+          BASE="https://equationalapplications.github.io/company-in-a-box-tutorial"
+          code_index=$(curl -s -o /dev/null -w "%{http_code}" "$BASE/index.html")
+          code_specs=$(curl -s -o /dev/null -w "%{http_code}" "$BASE/specs/company-in-a-box-tutorial/spec.md")
+          echo "index: $code_index (want 200) — specs: $code_specs (want 404)"
+          [ "$code_index" = "200" ] || { echo "FAIL: site not published"; exit 1; }
+          [ "$code_specs" = "404" ] || { echo "FAIL: repo docs leak through Pages"; exit 1; }
