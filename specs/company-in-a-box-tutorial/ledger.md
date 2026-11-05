@@ -19,7 +19,8 @@ file is the authoritative in-flight state (decision-log D11).
 | Implementation | DONE | `36f16b2`…(HEAD) — 13 pages, checker, tests, workflows; see commit map |
 | Independent sign-off | DONE | 13/13 pages PASS all gates — non-author reviewer deleg_f609832f (verdict in signoff.md) |
 | Review ladder (implemented diff) | DONE | T1.5 five rungs + Opus delta; all findings folded, tests 24/24 + checker PASS |
-| Merge | AWAITING KURT'S GO | everything green at HEAD |
+| Merge | DONE | merged on Kurt's go 2026-11-05 17:49Z (`31851c1`); Pages live |
+| Deploy + live verification | DONE | deploy workflow green; 13 pages + CSS all HTTP 200 at the live URL; `/specs/…` 404 asserted (repo docs not published); first-run CI fix: gitleaks checksums asset name corrected (`gitleaks_8.30.1_checksums.txt`) |
 
 ## Commit map (implementation)
 
