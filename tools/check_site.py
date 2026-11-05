@@ -385,6 +385,30 @@ def main() -> int:
     elif os.environ.get("GITHUB_ACTIONS") == "true":
         fail("gitleaks binary not found in CI — the secret gate is mandatory")
 
+    # Sitemap: hand-maintained, must list EXACTLY the 13 manifest URLs
+    # (no build step generates it, so the checker is what keeps it true)
+    sitemap_path = SITE / "sitemap.xml"
+    if sitemap_path.exists():
+        base = "https://equationalapplications.github.io/company-in-a-box-tutorial"
+        try:
+            sm_root = ET.parse(sitemap_path).getroot()
+            sm_urls = {
+                (e.text or "").strip()
+                for e in sm_root.iter()
+                if e.tag.rsplit("}", 1)[-1].lower() == "loc"
+            }
+        except ET.ParseError as exc:
+            fail(f"sitemap.xml: parse error: {exc}")
+            sm_urls = set()
+        expected = {f"{base}/{f}" for f in MANIFEST}
+        if sm_urls != expected:
+            for u in sorted(expected - sm_urls):
+                fail(f"sitemap.xml: missing manifest page {u}")
+            for u in sorted(sm_urls - expected):
+                fail(f"sitemap.xml: lists non-manifest URL {u}")
+    else:
+        fail("site/sitemap.xml missing (robots.txt points at it)")
+
     # External links
     if check_external_links:
         state = load_state()

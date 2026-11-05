@@ -40,8 +40,10 @@ inspected 2026-11-05 — white space, hierarchy, step styling, header/footer OK.
 
 ## Open items
 
-- GoatCounter account: Tessera preps, Kurt clicks signup. Site ships ZERO
-  scripts until then; tag lands as a follow-up commit after.
+- GoatCounter: SELF-HOSTED (D12) — parallel session provisions infra
+  (analytics-infra). Site ships ZERO scripts until the instance is
+  reachable; the tag + checker regex amendment land as a follow-up commit
+  after.
 - Search Console verification file: lands when Kurt creates the property.
 - Board note: the delivery-board skill file is at its size limit — this
   ledger is the in-flight record (decision-log D9/D11).
