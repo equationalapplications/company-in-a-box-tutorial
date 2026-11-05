@@ -1,0 +1,217 @@
+/* company-in-a-box-tutorial — design system.
+   Law: small bites, breathing room, show-don't-prose (INTENT.md).
+   Light palette, one narrow content column, everything else is air. */
+
+:root {
+  --ink: #1f2430;          /* near-black text */
+  --ink-soft: #5a6272;     /* secondary text */
+  --paper: #fdfdfb;        /* warm paper background */
+  --card: #ffffff;         /* card surfaces */
+  --line: #e6e4dd;         /* hairlines */
+  --accent: #2f6f4f;       /* single accent: quiet green */
+  --accent-soft: #e7f1eb;  /* accent wash */
+}
+
+* { box-sizing: border-box; }
+
+html { font-size: 17px; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", serif;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* The content column: narrow, centered, surrounded by air. */
+main {
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 5rem 1.5rem 6rem;
+}
+
+/* ---------- Header / nav ---------- */
+.site-header {
+  border-bottom: 1px solid var(--line);
+  background: var(--card);
+}
+.site-header .inner {
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 1.1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+}
+.site-header a { color: var(--ink); text-decoration: none; }
+.site-header .brand { font-weight: bold; }
+.site-header nav { display: flex; gap: 1.4rem; font-size: 0.92rem; }
+.site-header nav a { color: var(--ink-soft); }
+.site-header nav a:hover { color: var(--accent); }
+
+/* ---------- Type ---------- */
+h1 {
+  font-size: 2.1rem;
+  line-height: 1.25;
+  margin: 0 0 1.2rem;
+  letter-spacing: -0.01em;
+}
+h2 {
+  font-size: 1.3rem;
+  margin: 3rem 0 0.8rem;
+  color: var(--ink);
+}
+p { margin: 0 0 1.1rem; }
+a { color: var(--accent); }
+a:hover { text-decoration-thickness: 2px; }
+.lead {
+  font-size: 1.15rem;
+  color: var(--ink-soft);
+  margin-bottom: 2rem;
+}
+.term {
+  font-style: italic;
+  border-bottom: 2px dotted var(--line);
+}
+
+/* ---------- Steps: the tutorial unit. Few, numbered, airy. ---------- */
+ol.steps {
+  counter-reset: step;
+  list-style: none;
+  padding: 0;
+  margin: 2rem 0;
+}
+ol.steps > li {
+  counter-increment: step;
+  position: relative;
+  padding: 1.4rem 0 1.4rem 3.4rem;
+  border-top: 1px solid var(--line);
+}
+ol.steps > li::before {
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: 1.5rem;
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-family: system-ui, sans-serif;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+ol.steps code, p code, li code, pre code {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.85em;
+  background: #f1efe9;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 0.1em 0.35em;
+  white-space: pre-wrap;
+}
+pre code, pre {
+  display: block;
+  padding: 1rem 1.2rem;
+  font-size: 0.82em;
+  line-height: 1.5;
+  white-space: pre;
+  overflow-x: auto;
+  margin: 0.6rem 0;
+}
+
+/* ---------- Figures: the infographics ---------- */
+figure {
+  margin: 2.4rem 0;
+  padding: 2rem;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  text-align: center;
+}
+figure svg { max-width: 100%; height: auto; }
+figcaption {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+}
+
+/* ---------- Cards (overview grids) ---------- */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 1.2rem;
+  margin: 2rem 0;
+}
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 1.4rem 1.5rem;
+}
+.card h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.05rem;
+  color: var(--accent);
+}
+.card p { margin: 0; font-size: 0.95rem; color: var(--ink-soft); }
+
+/* ---------- Callouts ---------- */
+.aside {
+  background: var(--accent-soft);
+  border-left: 4px solid var(--accent);
+  border-radius: 0 8px 8px 0;
+  padding: 1rem 1.4rem;
+  margin: 2rem 0;
+  font-size: 0.97rem;
+}
+.aside p { margin: 0.3rem 0; }
+
+/* ---------- Next/prev pager ---------- */
+.pager {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 4rem;
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--line);
+  font-family: system-ui, sans-serif;
+  font-size: 0.95rem;
+}
+.pager a {
+  padding: 0.7rem 1.2rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  text-decoration: none;
+  background: var(--card);
+}
+.pager a:hover { border-color: var(--accent); }
+.pager .spacer { flex: 1; }
+
+/* ---------- Footer: identical on every page ---------- */
+.site-footer {
+  border-top: 1px solid var(--line);
+  background: var(--card);
+  margin-top: 4rem;
+}
+.site-footer .inner {
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 2.2rem 1.5rem 2.8rem;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+}
+.site-footer p { margin: 0.35rem 0; }
+
+/* ---------- Small screens: keep the air, lose the columns ---------- */
+@media (max-width: 560px) {
+  html { font-size: 16px; }
+  main { padding: 3rem 1.2rem 4rem; }
+  .site-header .inner { flex-direction: column; align-items: flex-start; }
+  .pager { flex-direction: column; }
+}

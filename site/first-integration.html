@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Step 4: install the integration — Company in a Box</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-topic="7">
+
+<header class="site-header">
+  <div class="inner">
+    <a class="brand" href="index.html">Company in a Box</a>
+    <nav>
+      <a href="index.html">Overview</a>
+      <a href="setup-hermes.html">Get started</a>
+      <a href="links.html">Links</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <h1>Step 4 · Install the integration</h1>
+  <p class="lead">Curated Thoughts Integrations is a collection of
+  ready-made connectors — one per agent harness. This step installs the
+  Hermes one, which upgrades your wiring from step 3 into something smarter.</p>
+
+  <p>Each integration ships the same layers, adapted to its harness:
+  registration (so you don't hand-edit config), a doctor that checks the
+  whole setup and explains anything broken, agent skills that teach it how to
+  use the memory correctly, and <span class="term">Intuitive Wisdom</span> —
+  remembered facts that arrive in the agent's context when they're relevant,
+  without the agent having to remember to ask.</p>
+
+  <ol class="steps">
+    <li>Get the Hermes integration: go to the
+    <a href="https://github.com/equationalapplications/curated-thoughts-integrations/releases?q=hermes">releases
+    page for the Hermes integration</a> and grab the latest
+    <code>hermes-v…</code> release.</li>
+    <li>Install it and run its doctor script — it checks the sidecar, the
+    brain, the vault, and the registration, and tells you exactly what to fix
+    if anything is off.</li>
+    <li>Restart Hermes. You'll know it worked when remembered facts start
+    showing up in conversations on their own: at session start you get a
+    short recall of relevant procedures and facts, and on each message the
+    integration matches relevant memory to what you just asked.</li>
+  </ol>
+
+  <figure>
+    <svg viewBox="0 0 560 210" role="img" aria-label="Plugin lifecycle: session start recalls context, each message pulls matching facts">
+      <circle cx="100" cy="100" r="46" fill="#ffffff" stroke="#2f6f4f" stroke-width="2"/>
+      <text x="100" y="94" text-anchor="middle" font-family="system-ui" font-size="12" fill="#1f2430">session</text>
+      <text x="100" y="112" text-anchor="middle" font-family="system-ui" font-size="12" fill="#1f2430">starts</text>
+      <circle cx="280" cy="100" r="46" fill="#ffffff" stroke="#2f6f4f" stroke-width="2"/>
+      <text x="280" y="94" text-anchor="middle" font-family="system-ui" font-size="12" fill="#1f2430">you send a</text>
+      <text x="280" y="112" text-anchor="middle" font-family="system-ui" font-size="12" fill="#1f2430">message</text>
+      <circle cx="460" cy="100" r="46" fill="#e7f1eb" stroke="#2f6f4f" stroke-width="2"/>
+      <text x="460" y="94" text-anchor="middle" font-family="system-ui" font-size="12" fill="#1f2430">relevant facts</text>
+      <text x="460" y="112" text-anchor="middle" font-family="system-ui" font-size="12" fill="#1f2430">appear in context</text>
+      <line x1="146" y1="100" x2="230" y2="100" stroke="#5a6272" stroke-width="2"/>
+      <polygon points="230,100 220,95 220,105" fill="#5a6272"/>
+      <line x1="326" y1="100" x2="410" y2="100" stroke="#5a6272" stroke-width="2"/>
+      <polygon points="410,100 400,95 400,105" fill="#5a6272"/>
+      <path d="M 460 50 C 460 10, 100 10, 100 50" fill="none" stroke="#5a6272" stroke-width="2" stroke-dasharray="5 4"/>
+      <text x="280" y="185" text-anchor="middle" font-family="system-ui" font-size="12" fill="#5a6272">facts never touch the system prompt, so nothing gets repeated</text>
+    </svg>
+    <figcaption>Intuitive Wisdom, per conversation. The memory speaks up
+    exactly when it's relevant — and never repeats itself.</figcaption>
+  </figure>
+
+  <div class="aside">
+    <p><strong>Other harnesses welcome:</strong> the same repo ships
+    integrations for Claude Code, OpenCode, DeepSeek Harness, OpenClaw, and
+    Docker Agent. Your company's memory can feed every agent you use — see
+    the <a href="links.html">link directory</a>.</p>
+  </div>
+
+  <p>Next: step 5, <a href="procedures.html">give the company standing
+  rules</a>.</p>
+
+  <div class="pager">
+    <a href="connect-memory.html">← Step 3: connect the memory</a>
+    <span class="spacer"></span>
+    <a href="procedures.html">Step 5: standing rules →</a>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="inner">
+    <p>Made with ❤️ by <a href="https://equationalapplications.com">Equational Applications LLC</a>.</p>
+    <p>This tutorial is free and open source under the <a href="https://github.com/equationalapplications/company-in-a-box-tutorial/blob/main/LICENSE">MIT license</a>. Curated Thoughts, Curated Thoughts Integrations, and SynapseTree are also MIT-licensed open source.</p>
+    <p><a href="index.html">Overview</a> · <a href="links.html">All links</a> · <a href="https://github.com/equationalapplications/company-in-a-box-tutorial">Source code</a></p>
+  </div>
+</footer>
+
+</body>
+</html>

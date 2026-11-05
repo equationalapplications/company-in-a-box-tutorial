@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Step 3: connect the memory — Company in a Box</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-topic="6">
+
+<header class="site-header">
+  <div class="inner">
+    <a class="brand" href="index.html">Company in a Box</a>
+    <nav>
+      <a href="index.html">Overview</a>
+      <a href="setup-hermes.html">Get started</a>
+      <a href="links.html">Links</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <h1>Step 3 · Connect the memory</h1>
+  <p class="lead">An agent with a memory it can't reach is just talk. This
+  page wires your Curated Thoughts brain into Hermes so the agent can search
+  it like any other tool.</p>
+
+  <p>The connection uses <span class="term">MCP</span> (Model Context
+  Protocol) — a standard way for agents to use outside tools. Curated
+  Thoughts ships a small helper program called the
+  <span class="term">sidecar</span> that speaks MCP: your agent sees the
+  vault as native tools — semantic recall, wiki search, and more.</p>
+
+  <ol class="steps">
+    <li>Open <code>~/.hermes/config.yaml</code> and add an
+    <code>mcp_servers</code> entry that launches the Curated Thoughts MCP
+    server (this is the exact block the integration's own installer writes):<br>
+    <pre><code>mcp_servers:
+  curated-thoughts:
+    command: curated-thoughts-mcp
+    args: ["--mcp"]</code></pre></li>
+    <li>Restart Hermes so it discovers the new server's tools.</li>
+    <li>Verify: ask your agent something only the memory would know —
+    "search my vault for what I said about X". If it comes back with your
+    fact, the wiring works.</li>
+  </ol>
+
+  <figure>
+    <svg viewBox="0 0 560 150" role="img" aria-label="Agent talks to the sidecar over MCP, the sidecar reads the vault">
+      <rect x="40" y="45" width="130" height="56" rx="10" fill="#ffffff" stroke="#2f6f4f" stroke-width="2"/>
+      <text x="105" y="70" text-anchor="middle" font-family="system-ui" font-size="13" fill="#1f2430">Hermes Agent</text>
+      <text x="105" y="88" text-anchor="middle" font-family="system-ui" font-size="11" fill="#5a6272">calls memory tools</text>
+      <line x1="170" y1="73" x2="220" y2="73" stroke="#5a6272" stroke-width="2"/>
+      <polygon points="225,73 215,68 215,78" fill="#5a6272"/>
+      <text x="197" y="64" text-anchor="middle" font-family="system-ui" font-size="11" fill="#5a6272">MCP</text>
+      <rect x="230" y="45" width="150" height="56" rx="10" fill="#e7f1eb" stroke="#2f6f4f" stroke-width="2"/>
+      <text x="305" y="70" text-anchor="middle" font-family="system-ui" font-size="13" fill="#1f2430">the sidecar</text>
+      <text x="305" y="88" text-anchor="middle" font-family="system-ui" font-size="11" fill="#5a6272">small helper, speaks MCP</text>
+      <line x1="380" y1="73" x2="435" y2="73" stroke="#5a6272" stroke-width="2"/>
+      <polygon points="435,73 425,68 425,78" fill="#5a6272"/>
+      <rect x="440" y="45" width="90" height="56" rx="10" fill="#ffffff" stroke="#2f6f4f" stroke-width="2"/>
+      <text x="485" y="70" text-anchor="middle" font-family="system-ui" font-size="13" fill="#1f2430">vault</text>
+      <text x="485" y="88" text-anchor="middle" font-family="system-ui" font-size="11" fill="#5a6272">your files</text>
+      <text x="280" y="130" text-anchor="middle" font-family="system-ui" font-size="12" fill="#5a6272">agent → sidecar → vault: everything stays local</text>
+    </svg>
+    <figcaption>The wiring in one picture. The sidecar is the only thing
+    that touches the vault; the agent only talks to the sidecar.</figcaption>
+  </figure>
+
+  <div class="aside">
+    <p><strong>Shortcut:</strong> the next page installs an integration that
+    does this registration for you — and adds a few things plain MCP can't,
+    like automatically surfacing remembered facts in each conversation. Its
+    installer detects an existing <code>mcp_servers</code> entry and won't
+    add a duplicate. If you'd rather not hand-edit config, skip ahead to
+    <a href="first-integration.html">step 4</a> and let the integration wire
+    it.</p>
+  </div>
+
+  <p>Next: step 4, <a href="first-integration.html">install the integration</a>.</p>
+
+  <div class="pager">
+    <a href="setup-memory.html">← Step 2: install Curated Thoughts</a>
+    <span class="spacer"></span>
+    <a href="first-integration.html">Step 4: install the integration →</a>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="inner">
+    <p>Made with ❤️ by <a href="https://equationalapplications.com">Equational Applications LLC</a>.</p>
+    <p>This tutorial is free and open source under the <a href="https://github.com/equationalapplications/company-in-a-box-tutorial/blob/main/LICENSE">MIT license</a>. Curated Thoughts, Curated Thoughts Integrations, and SynapseTree are also MIT-licensed open source.</p>
+    <p><a href="index.html">Overview</a> · <a href="links.html">All links</a> · <a href="https://github.com/equationalapplications/company-in-a-box-tutorial">Source code</a></p>
+  </div>
+</footer>
+
+</body>
+</html>

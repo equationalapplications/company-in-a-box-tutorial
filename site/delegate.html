@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Step 6: delegate work — Company in a Box</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-topic="9">
+
+<header class="site-header">
+  <div class="inner">
+    <a class="brand" href="index.html">Company in a Box</a>
+    <nav>
+      <a href="index.html">Overview</a>
+      <a href="setup-hermes.html">Get started</a>
+      <a href="links.html">Links</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <h1>Step 6 · Delegate the work</h1>
+  <p class="lead">Your agent doesn't have to do everything itself. Hermes
+  can spawn <span class="term">subagents</span> — isolated worker agents
+  that take one task, run it, and report back. That's your worker roles from
+  <a href="the-pattern.html">the pattern</a>, made real.</p>
+
+  <ol class="steps">
+    <li>Ask your agent to hand work off, in plain language: "delegate this to
+    a subagent: research three competitor sites and summarize each in three
+    bullets." The delegation tool spawns an isolated worker with exactly
+    that brief.</li>
+    <li>Give several jobs at once — Hermes can run subagents in parallel,
+    so independent tasks finish together instead of one by one.</li>
+    <li>Watch the work happen: the live monitor shows every running worker,
+    its transcript, and its cost. You can steer a worker mid-job or stop
+    it.</li>
+  </ol>
+
+  <figure>
+    <svg viewBox="0 0 560 200" role="img" aria-label="Dispatch: the agent spawns isolated workers who report back">
+      <rect x="215" y="20" width="130" height="46" rx="8" fill="#e7f1eb" stroke="#2f6f4f" stroke-width="2"/>
+      <text x="280" y="48" text-anchor="middle" font-family="system-ui" font-size="13" fill="#1f2430">your agent</text>
+      <line x1="280" y1="66" x2="120" y2="110" stroke="#5a6272" stroke-width="2"/>
+      <line x1="280" y1="66" x2="280" y2="110" stroke="#5a6272" stroke-width="2"/>
+      <line x1="280" y1="66" x2="440" y2="110" stroke="#5a6272" stroke-width="2"/>
+      <rect x="60" y="110" width="120" height="46" rx="8" fill="#ffffff" stroke="#1f2430"/>
+      <text x="120" y="138" text-anchor="middle" font-family="system-ui" font-size="13" fill="#1f2430">worker A</text>
+      <rect x="220" y="110" width="120" height="46" rx="8" fill="#ffffff" stroke="#1f2430"/>
+      <text x="280" y="138" text-anchor="middle" font-family="system-ui" font-size="13" fill="#1f2430">worker B</text>
+      <rect x="380" y="110" width="120" height="46" rx="8" fill="#ffffff" stroke="#1f2430"/>
+      <text x="440" y="138" text-anchor="middle" font-family="system-ui" font-size="13" fill="#1f2430">worker C</text>
+      <text x="280" y="185" text-anchor="middle" font-family="system-ui" font-size="12" fill="#5a6272">each worker is isolated: one brief, one report, no interference</text>
+    </svg>
+    <figcaption>One dispatcher, many isolated workers. Briefs flow down;
+    reports flow back up.</figcaption>
+  </figure>
+
+  <div class="aside">
+    <p><strong>Keep briefs small:</strong> a subagent sees only its brief, so
+    the more precisely you state the job — the goal, the constraints, what
+    "done" looks like — the better the result. This mirrors how the real
+    company writes specs before building.</p>
+  </div>
+
+  <p>Next: step 7, <a href="schedule.html">put work on a schedule</a>.</p>
+
+  <div class="pager">
+    <a href="procedures.html">← Step 5: standing rules</a>
+    <span class="spacer"></span>
+    <a href="schedule.html">Step 7: schedule jobs →</a>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="inner">
+    <p>Made with ❤️ by <a href="https://equationalapplications.com">Equational Applications LLC</a>.</p>
+    <p>This tutorial is free and open source under the <a href="https://github.com/equationalapplications/company-in-a-box-tutorial/blob/main/LICENSE">MIT license</a>. Curated Thoughts, Curated Thoughts Integrations, and SynapseTree are also MIT-licensed open source.</p>
+    <p><a href="index.html">Overview</a> · <a href="links.html">All links</a> · <a href="https://github.com/equationalapplications/company-in-a-box-tutorial">Source code</a></p>
+  </div>
+</footer>
+
+</body>
+</html>

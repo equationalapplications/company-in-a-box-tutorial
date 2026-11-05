@@ -1,0 +1,174 @@
+"""Unit tests for check_site.py (run: python3 tools/test_check_site.py).
+
+Covers the pure-logic pieces the CI run can't exercise: step counting,
+footer extraction, GoatCounter/placeholder regexes, redaction patterns,
+and the external-link classification (network mocked).
+"""
+import socket
+import sys
+import unittest
+from pathlib import Path
+from unittest.mock import patch
+from xml.etree import ElementTree as ET
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import check_site as cs
+
+
+def html(body: str) -> ET.Element:
+    return ET.fromstring(f"<html><body>{body}</body></html>")
+
+
+class TestStepCounter(unittest.TestCase):
+    def test_counts_top_level_only(self):
+        root = html("<ol><li>a</li><li>b<ol><li>nested</li></ol></li></ol>"
+                    "<ol><li>c</li></ol>")
+        self.assertEqual(cs.walk_top_level_ol_li(root), 3)
+
+    def test_ignores_ul(self):
+        root = html("<ul><li>a</li></ul><ol><li>b</li></ol>")
+        self.assertEqual(cs.walk_top_level_ol_li(root), 1)
+
+    def test_ol_nested_in_ul_counts(self):
+        # documented behavior: <ol> under <ul> starts its own step sequence
+        root = html("<ul><li><ol><li>step</li></ol></li></ul>")
+        self.assertEqual(cs.walk_top_level_ol_li(root), 1)
+
+    def test_empty(self):
+        root = html("<p>no steps</p>")
+        self.assertEqual(cs.walk_top_level_ol_li(root), 0)
+
+
+class TestFooter(unittest.TestCase):
+    def test_extracts_footer(self):
+        raw = "<footer><p>x</p></footer>"
+        self.assertEqual(cs.footer_of(raw), raw)
+
+    def test_missing_footer_is_empty(self):
+        self.assertEqual(cs.footer_of("<p>nope</p>"), "")
+
+
+class TestGoatCounter(unittest.TestCase):
+    def test_valid_tag_matches(self):
+        raw = ('<script data-goatcounter="https://mysite.goatcounter.com/count" '
+               'async src="//gc.zgo.at/count.js"></script>')
+        self.assertTrue(cs.GC_RE.search(raw))
+        self.assertFalse(cs.GC_PLACEHOLDER_RE.search(raw))
+
+    def test_placeholder_detected(self):
+        raw = '<script data-goatcounter="https://YOURCODE.goatcounter.com/count"></script>'
+        self.assertTrue(cs.GC_PLACEHOLDER_RE.search(raw))
+
+    def test_script_regex_counts(self):
+        self.assertEqual(len(cs.SCRIPT_RE.findall("<script>a</script><script>b</script>")), 2)
+
+
+class TestRedaction(unittest.TestCase):
+    def test_vault_paths_fail(self):
+        for bad in ["/home/kurt/secret", "~/Documents/notes",
+                    "immutable-source-files", "Documents/equational-wiki"]:
+            hits = [label for pat, label in cs.REDACTION_PATTERNS if pat.search(bad)]
+            self.assertTrue(hits, f"{bad} should be flagged")
+
+    def test_public_dotfiles_pass(self):
+        for ok in ["~/.hermes/config.yaml", "source ~/.bashrc"]:
+            hits = [label for pat, label in cs.REDACTION_PATTERNS if pat.search(ok)]
+            self.assertFalse(hits, f"{ok} should NOT be flagged: {hits}")
+
+
+class TestExternalClassification(unittest.TestCase):
+    def test_404_is_hard_fail(self):
+        import urllib.error
+        err = urllib.error.HTTPError("u", 404, "nf", None, None)
+        with patch.object(cs.urllib.request, "urlopen", side_effect=err):
+            self.assertEqual(cs.check_external("https://x.test/a"), "FAIL")
+
+    def test_429_is_warning(self):
+        import urllib.error
+        err = urllib.error.HTTPError("u", 429, "slow down", None, None)
+        with patch.object(cs.urllib.request, "urlopen", side_effect=err):
+            self.assertEqual(cs.check_external("https://x.test/a"), "WARN")
+
+    def test_ok(self):
+        class R:
+            status = 200
+            def __enter__(self): return self
+            def __exit__(self, *a): return False
+        with patch.object(cs.urllib.request, "urlopen", return_value=R()):
+            self.assertEqual(cs.check_external("https://x.test/a"), "OK")
+
+    def test_dns_gaierror_fails_after_retry(self):
+        import urllib.error
+        err = urllib.error.URLError(socket.gaierror(8, "nx"))
+        with patch.object(cs.urllib.request, "urlopen", side_effect=err):
+            self.assertEqual(cs.check_external("https://x.test/a"), "FAIL")
+
+    def test_timeout_is_warning(self):
+        with patch.object(cs.urllib.request, "urlopen", side_effect=TimeoutError()):
+            self.assertEqual(cs.check_external("https://x.test/a"), "WARN")
+
+
+class TestStreakGate(unittest.TestCase):
+    """apply_link_result: streak advances on scheduled runs only."""
+
+    def test_pr_runs_never_escalate(self):
+        counts = {}
+        for _ in range(10):
+            outcome = cs.apply_link_result(counts, "https://x.test", "WARN",
+                                           advance=False)
+            self.assertEqual(outcome, "warn")
+            self.assertEqual(counts, {})
+
+    def test_scheduled_runs_escalate_on_third(self):
+        counts = {}
+        outcomes = [cs.apply_link_result(counts, "https://x.test", "WARN",
+                                         advance=True) for _ in range(3)]
+        self.assertEqual(outcomes, ["warn", "warn", "fail"])
+
+    def test_ok_clears_streak(self):
+        counts = {"https://x.test": 2}
+        outcome = cs.apply_link_result(counts, "https://x.test", "OK",
+                                       advance=True)
+        self.assertEqual(outcome, "ok")
+        self.assertEqual(counts, {})
+
+    def test_fail_clears_streak_and_fails(self):
+        counts = {"https://x.test": 2}
+        outcome = cs.apply_link_result(counts, "https://x.test", "FAIL",
+                                       advance=True)
+        self.assertEqual(outcome, "fail")
+        self.assertEqual(counts, {})
+
+
+class TestCheckPage(unittest.TestCase):
+    def setUp(self):
+        self.html5lib = cs.load_html5lib()
+        self.assertTrue(self.html5lib, "html5lib required for tests")
+
+    def test_good_page_passes(self):
+        raw = ('<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">'
+               '<meta name="viewport" content="width=device-width, initial-scale=1">'
+               '<title>t</title></head><body data-topic="2">'
+               '<h1>Topic</h1><ol class="steps"><li>a</li><li>b</li></ol>'
+               '<svg></svg><a href="index.html">home</a></body></html>')
+        root, errors = cs.parse_strict(self.html5lib, raw)
+        self.assertEqual(errors, [])
+        self.assertEqual(cs.walk_top_level_ol_li(root), 2)
+
+    def test_missing_doctype_is_flagged(self):
+        raw = "<html><head><title>t</title></head><body></body></html>"
+        _, errors = cs.parse_strict(self.html5lib, raw)
+        self.assertTrue(errors)
+
+    def test_six_steps_exceed_limit(self):
+        root = html("<ol>" + "<li>s</li>" * 6 + "</ol>")
+        self.assertEqual(cs.walk_top_level_ol_li(root), 6)
+        self.assertTrue(6 > cs.STEP_LIMIT)
+
+    def test_on_handler_detected(self):
+        raw = '<body onload="evil()">'
+        self.assertTrue(cs.ON_HANDLER_RE.search(raw))
+
+
+if __name__ == "__main__":
+    unittest.main(verbosity=2)

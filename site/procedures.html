@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Step 5: standing rules — Company in a Box</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-topic="8">
+
+<header class="site-header">
+  <div class="inner">
+    <a class="brand" href="index.html">Company in a Box</a>
+    <nav>
+      <a href="index.html">Overview</a>
+      <a href="setup-hermes.html">Get started</a>
+      <a href="links.html">Links</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <h1>Step 5 · Give the company standing rules</h1>
+  <p class="lead">What makes an agent-run company dependable isn't
+  intelligence — it's rules that hold between conversations. Your company's
+  rule stack has four layers, each a plain file.</p>
+
+  <ol class="steps">
+    <li><strong>INTENT.md</strong> — the why. What the company is trying to
+    do, the rules it must follow, what it deliberately does not do. Written
+    for people; agents check every plan against it. It holds intent only —
+    never status or history.</li>
+    <li><strong>AGENTS.md</strong> — the one-line contract for agents working
+    in a codebase: read the intent file first, and every spec must align
+    with it.</li>
+    <li><strong>Procedures</strong> — the how for recurring work: how a
+    delivery happens, how reviews run, what to do when something breaks.
+    Write one whenever the same task has happened twice.</li>
+    <li><strong>Skills</strong> — packaged know-how your Hermes agent loads
+    when a task matches: tool-specific commands, proven workflows, pitfalls.
+    (Hermes calls them <em>skills</em>; plain markdown files they are.)</li>
+  </ol>
+
+  <figure>
+    <svg viewBox="0 0 560 230" role="img" aria-label="Rule stack: intent at the bottom, then agents contract, procedures, skills on top">
+      <rect x="120" y="160" width="320" height="44" rx="8" fill="#e7f1eb" stroke="#2f6f4f" stroke-width="2"/>
+      <text x="280" y="187" text-anchor="middle" font-family="system-ui" font-size="13" fill="#1f2430">INTENT.md — why (rarely changes)</text>
+      <rect x="120" y="112" width="320" height="44" rx="8" fill="#ffffff" stroke="#2f6f4f" stroke-width="2"/>
+      <text x="280" y="139" text-anchor="middle" font-family="system-ui" font-size="13" fill="#1f2430">AGENTS.md — the contract</text>
+      <rect x="120" y="64" width="320" height="44" rx="8" fill="#ffffff" stroke="#2f6f4f" stroke-width="2"/>
+      <text x="280" y="91" text-anchor="middle" font-family="system-ui" font-size="13" fill="#1f2430">procedures — how we work</text>
+      <rect x="120" y="16" width="320" height="44" rx="8" fill="#ffffff" stroke="#2f6f4f" stroke-width="2"/>
+      <text x="280" y="43" text-anchor="middle" font-family="system-ui" font-size="13" fill="#1f2430">skills — how to use each tool</text>
+      <text x="505" y="187" text-anchor="middle" font-family="system-ui" font-size="11" fill="#5a6272">changes least</text>
+      <text x="505" y="43" text-anchor="middle" font-family="system-ui" font-size="11" fill="#5a6272">changes most</text>
+    </svg>
+    <figcaption>The rule stack. Lower layers are stable; upper layers
+    change as the company learns. Everything above the intent must align
+    with it.</figcaption>
+  </figure>
+
+  <div class="aside">
+    <p><strong>You already saw the pattern:</strong> this exact stack — a
+    human-readable intent file, a minimal agents contract, procedures, and
+    skills — is how Curated Thoughts and CT Integrations are run, and how
+    this very tutorial repo works. Copy the shape, not just the idea.</p>
+  </div>
+
+  <p>Next: step 6, <a href="delegate.html">delegate work</a>.</p>
+
+  <div class="pager">
+    <a href="first-integration.html">← Step 4: the integration</a>
+    <span class="spacer"></span>
+    <a href="delegate.html">Step 6: delegate work →</a>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="inner">
+    <p>Made with ❤️ by <a href="https://equationalapplications.com">Equational Applications LLC</a>.</p>
+    <p>This tutorial is free and open source under the <a href="https://github.com/equationalapplications/company-in-a-box-tutorial/blob/main/LICENSE">MIT license</a>. Curated Thoughts, Curated Thoughts Integrations, and SynapseTree are also MIT-licensed open source.</p>
+    <p><a href="index.html">Overview</a> · <a href="links.html">All links</a> · <a href="https://github.com/equationalapplications/company-in-a-box-tutorial">Source code</a></p>
+  </div>
+</footer>
+
+</body>
+</html>
