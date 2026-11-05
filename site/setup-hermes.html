@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Step 1: install Hermes Agent — Company in a Box</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-topic="4">
+
+<header class="site-header">
+  <div class="inner">
+    <a class="brand" href="index.html">Company in a Box</a>
+    <nav>
+      <a href="index.html">Overview</a>
+      <a href="setup-hermes.html">Get started</a>
+      <a href="links.html">Links</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <h1>Step 1 · Install Hermes Agent</h1>
+  <p class="lead">Hermes Agent is the doer — the runtime your executive and
+  worker agents run on. Three commands and you're talking to it.</p>
+
+  <p>On Linux, macOS, or WSL2 (the recommended path for this tutorial):</p>
+
+  <ol class="steps">
+    <li>Install it:<br>
+    <code>curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash</code><br>
+    When it finishes, reload your shell (<code>source ~/.bashrc</code> or
+    <code>source ~/.zshrc</code>). On macOS or Windows you can instead
+    download the Hermes Desktop installer from the
+    <a href="https://hermes-agent.nousresearch.com/">website</a>.</li>
+    <li>Run the setup wizard:<br>
+    <code>hermes setup</code><br>
+    It walks you through choosing an AI provider. The easiest path is
+    <code>hermes setup --portal</code> — one login sets up a model plus web
+    search and a few other tools in one go.</li>
+    <li>Say hello. Start a conversation and check it responds:
+    that's your agent, alive. <code>hermes</code> starts a chat.</li>
+  </ol>
+
+  <figure>
+    <svg viewBox="0 0 560 140" role="img" aria-label="Install flow: install, set up a provider, first conversation">
+      <rect x="30" y="40" width="140" height="56" rx="10" fill="#ffffff" stroke="#2f6f4f" stroke-width="2"/>
+      <text x="100" y="72" text-anchor="middle" font-family="system-ui" font-size="13" fill="#1f2430">1 · install</text>
+      <line x1="170" y1="68" x2="215" y2="68" stroke="#5a6272" stroke-width="2"/>
+      <rect x="215" y="40" width="140" height="56" rx="10" fill="#ffffff" stroke="#2f6f4f" stroke-width="2"/>
+      <text x="285" y="72" text-anchor="middle" font-family="system-ui" font-size="13" fill="#1f2430">2 · pick a model</text>
+      <line x1="355" y1="68" x2="400" y2="68" stroke="#5a6272" stroke-width="2"/>
+      <rect x="400" y="40" width="130" height="56" rx="10" fill="#ffffff" stroke="#2f6f4f" stroke-width="2"/>
+      <text x="465" y="72" text-anchor="middle" font-family="system-ui" font-size="13" fill="#1f2430">3 · first chat</text>
+      <text x="280" y="122" text-anchor="middle" font-family="system-ui" font-size="12" fill="#5a6272">under five minutes from install to conversation</text>
+    </svg>
+    <figcaption>The whole install. Config lives in <code>~/.hermes/</code>.</figcaption>
+  </figure>
+
+  <div class="aside">
+    <p><strong>About "profiles":</strong> Hermes lets you run several named
+    agents with different roles and settings. That's how Equational
+    Applications separates Tessera (executive) from worker agents — but it's
+    an optional refinement, not an install step. One agent is a perfectly
+    good company to start.</p>
+  </div>
+
+  <p>Next: step 2, <a href="setup-memory.html">give your company a memory</a>.</p>
+
+  <div class="pager">
+    <a href="the-three-tools.html">← The three tools</a>
+    <span class="spacer"></span>
+    <a href="setup-memory.html">Step 2: install Curated Thoughts →</a>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="inner">
+    <p>Made with ❤️ by <a href="https://equationalapplications.com">Equational Applications LLC</a>.</p>
+    <p>This tutorial is free and open source under the <a href="https://github.com/equationalapplications/company-in-a-box-tutorial/blob/main/LICENSE">MIT license</a>. Curated Thoughts, Curated Thoughts Integrations, and SynapseTree are also MIT-licensed open source.</p>
+    <p><a href="index.html">Overview</a> · <a href="links.html">All links</a> · <a href="https://github.com/equationalapplications/company-in-a-box-tutorial">Source code</a></p>
+  </div>
+</footer>
+
+</body>
+</html>
