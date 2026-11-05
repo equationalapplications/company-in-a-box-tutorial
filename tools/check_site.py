@@ -17,6 +17,7 @@ Exit codes: 0 = pass (or "site not ready" skip), 1 = failures found.
 from __future__ import annotations
 
 import json
+import os
 import re
 import socket
 import sys
@@ -57,6 +58,7 @@ GC_RE = re.compile(
 )
 GC_PLACEHOLDER_RE = re.compile(r"data-goatcounter=\"[^\"]*(YOURCODE|placeholder|example)[^\"]*\"", re.I)
 SCRIPT_RE = re.compile(r"<script\b", re.I)
+ON_HANDLER_RE = re.compile(r"\son[a-z]+\s*=\s*[\"']", re.I)
 
 REDACTION_PATTERNS = [
     (re.compile(r"/home/", re.I), "vault path fragment: /home/"),
@@ -110,9 +112,14 @@ def parse_strict(html5lib, text: str):
 
 def walk_top_level_ol_li(root) -> int:
     """Count <li> children of top-level-in-body <ol> elements (not nested
-    inside another <ol>/<ul>)."""
+    inside another <ol>/<ul>). Namespace-agnostic (html5lib namespaced,
+    plain ET in tests)."""
     count = 0
-    body = root.find(".//{http://www.w3.org/1999/xhtml}body")
+    body = None
+    for el in root.iter():
+        if el.tag.rsplit("}", 1)[-1].lower() == "body":
+            body = el
+            break
     if body is None:
         return count
     stack = list(body)
@@ -178,8 +185,10 @@ def check_page(html5lib, path: Path, topic: str) -> str | None:
         if steps > STEP_LIMIT:
             fail(f"{path.name}: {steps} top-level <ol> steps (limit {STEP_LIMIT})")
 
-    # Scripts: zero, or exactly one real GoatCounter tag
+    # Scripts: zero, or exactly one real GoatCounter tag; no inline handlers
     scripts = SCRIPT_RE.findall(raw)
+    if ON_HANDLER_RE.search(raw):
+        fail(f"{path.name}: inline event handler (on*=) found — no JS allowed")
     if scripts:
         if len(scripts) != 1:
             fail(f"{path.name}: {len(scripts)} <script> tags (max 1: GoatCounter)")
@@ -188,14 +197,22 @@ def check_page(html5lib, path: Path, topic: str) -> str | None:
         elif not GC_RE.search(raw):
             fail(f"{path.name}: the single <script> is not a valid GoatCounter tag")
 
-    # Internal href resolution
+    # Internal href resolution (file AND anchor)
     for a in findall("a"):
         href = a.get("href") or ""
         if href.startswith(("http://", "https://", "mailto:", "#")) or not href:
             continue
-        target = href.split("#", 1)[0]
-        if target and not (SITE / target).exists():
+        file_part, _, anchor = href.partition("#")
+        if file_part and not (SITE / file_part).exists():
             fail(f"{path.name}: internal href '{href}' does not resolve")
+        elif anchor and file_part:
+            target_raw = (SITE / file_part).read_text(encoding="utf-8")
+            if f'id="{anchor}"' not in target_raw:
+                fail(f"{path.name}: internal href '{href}' anchor missing in "
+                     f"{file_part}")
+        elif anchor:
+            if f'id="{anchor}"' not in raw:
+                fail(f"{path.name}: anchor '#{anchor}' missing on this page")
 
     # Redaction grep
     for pattern, label in REDACTION_PATTERNS:
@@ -276,6 +293,8 @@ def main() -> int:
 
     raws: dict[str, str] = {}
     for fname, topic in MANIFEST.items():
+        if fname in missing:
+            continue  # already reported; opening it would crash
         raw = check_page(html5lib, SITE / fname, topic)
         if raw is not None:
             raws[fname] = raw
@@ -332,26 +351,30 @@ def main() -> int:
     if check_external_links:
         state = load_state()
         warn_counts = state.setdefault("warn_streak", {})
+        # Spec test 2: the streak advances on SCHEDULED runs only — a
+        # transient 429 across three PR pushes must not fail the PR.
+        advance_streak = os.environ.get("GITHUB_EVENT_NAME", "") == "schedule"
         urls = set()
         for raw in raws.values():
             urls.update(re.findall(r'href="(https?://[^"]+)"', raw))
         for url in sorted(urls):
             result = check_external(url)
             if result == "OK":
-                warn_counts.pop(url, None)
+                if advance_streak:
+                    warn_counts.pop(url, None)
             elif result == "FAIL":
                 fail(f"external link hard failure (404/DNS): {url}")
                 warn_counts.pop(url, None)
             else:
-                reason = " (DNS)" if result == "WARN:DNS" else ""
-                warn_counts[url] = warn_counts.get(url, 0) + 1
-                if warn_counts[url] >= WARN_ESCALATE_AFTER:
-                    fail(f"external link warned {warn_counts[url]} consecutive "
-                         f"runs, escalating: {url}{reason}")
-                else:
-                    warn(f"external link warning (run {warn_counts[url]}/"
-                         f"{WARN_ESCALATE_AFTER}): {url}{reason}")
-        save_state(state)
+                if advance_streak:
+                    warn_counts[url] = warn_counts.get(url, 0) + 1
+                    if warn_counts[url] >= WARN_ESCALATE_AFTER:
+                        fail(f"external link warned {warn_counts[url]} consecutive "
+                             f"scheduled runs, escalating: {url}")
+                        continue
+                warn(f"external link warning: {url}")
+        if advance_streak:
+            save_state(state)
 
     # Report
     for w in warnings:

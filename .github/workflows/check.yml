@@ -45,7 +45,14 @@ jobs:
       - name: Assert deployed site serves pages, not repo docs
         run: |
           BASE="https://equationalapplications.github.io/company-in-a-box-tutorial"
-          code_index=$(curl -s -o /dev/null -w "%{http_code}" "$BASE/index.html")
+          # Pages propagation can lag just after deploy — retry before failing
+          code_index=""
+          for i in 1 2 3 4 5 6; do
+            code_index=$(curl -s -o /dev/null -w "%{http_code}" "$BASE/index.html")
+            [ "$code_index" = "200" ] && break
+            echo "attempt $i: index=$code_index — waiting 15s for propagation"
+            sleep 15
+          done
           code_specs=$(curl -s -o /dev/null -w "%{http_code}" "$BASE/specs/company-in-a-box-tutorial/spec.md")
           echo "index: $code_index (want 200) — specs: $code_specs (want 404)"
           [ "$code_index" = "200" ] || { echo "FAIL: site not published"; exit 1; }

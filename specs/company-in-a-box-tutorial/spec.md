@@ -262,7 +262,10 @@ full branch, not its current commits.
    deploys never gate on third-party availability. Footer check: all 13
    footers byte-identical AND each contains the `equationalapplications.com`
    link and the MIT statement (identity alone could pass a footer that is
-   uniformly missing the attribution).
+   uniformly missing the attribution). Redaction-grep note: dotfile paths
+   (`~/.hermes`, shell rc files) are exempt from the `~/` pattern — they are
+   public config paths the tutorial must teach; user-directory paths under
+   `~/` still hard-fail.
 3. **Design-law check** — each non-landing page's numbered steps ≤ 5; each
    page contains at least one inline SVG where the page map promises one;
    **single-topic check** — mechanical part: `tools/check_site.py` verifies

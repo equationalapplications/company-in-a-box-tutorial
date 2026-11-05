@@ -16,7 +16,7 @@ change to a page re-signs that page's row.
 | 7 | first-integration.html | ⬜ | ⬜ | CTI README integration layers + Intuitive Wisdom + hermes-v0.7.2 status (fetched 2026-11-05); integrations/hermes tree verified (plugin.yaml, integration.yaml, hooks/) via GH API 2026-11-05; compat receipt pending | ⬜ |
 | 8 | procedures.html | ⬜ | ⬜ | Rule stack: EA real practice (vault fact-check, 2026-11-05); skills/context-files @ Hermes docs (both 200, 2026-11-05); CT/CTI INTENT+AGENTS pattern (fetched 2026-11-05) | ⬜ |
 | 9 | delegate.html | ⬜ | ⬜ | Hermes docs delegation.md (llms-full, fetched 2026-11-05): delegate tool, isolated subagents, parallel children, live monitor; upstream-docs compat receipt pending | ⬜ |
-| 10 | schedule.html | ⬜ | ⬜ | Hermes docs cron.md summary (llms.txt, fetched 2026-11-05): plain-language scheduling, skill attachment, delivery | ⬜ |
+| 10 | schedule.html | ⬜ | ⬜ | Hermes docs cron.md summary (llms.txt, fetched 2026-11-05): plain-language scheduling, skill attachment, delivery; upstream-docs compat receipt pending | ⬜ |
 | 11 | delivery-flow.html | ⬜ | ⬜ | One-PR sentence @ CT `33fb4fd70494` "How changes are made" (stale named-model sentence excluded); EA internal flow (vault fact-check, 2026-11-05, taught generically) | ⬜ |
 | 12 | team-memory.html | ⬜ | ⬜ | synapsetree.dev own copy ONLY [vendor-description]: cloud hub, teams, exportable (fetched 2026-11-05); no pricing on page; no auto-sync claim; one-brain-per-vault @ CT `33fb4fd70494` | ⬜ |
 | 13 | links.html | ⬜ | ⬜ | Every external target re-verified by check_site.py --check-external (PASS 2026-11-05); link list uses ul | ⬜ |
