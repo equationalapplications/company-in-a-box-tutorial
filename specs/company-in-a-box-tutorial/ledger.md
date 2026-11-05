@@ -44,6 +44,8 @@ inspected 2026-11-05 — white space, hierarchy, step styling, header/footer OK.
   (analytics-infra). Site ships ZERO scripts until the instance is
   reachable; the tag + checker regex amendment land as a follow-up commit
   after.
-- Search Console verification file: lands when Kurt creates the property.
+- Search Console + Bing: VERIFIED 2026-11-05 (Google HTML file, Bing meta
+  tag — both must stay in place). Sitemap + robots.txt shipped and live;
+  sitemap submitted in each console closes the loop.
 - Board note: the delivery-board skill file is at its size limit — this
   ledger is the in-flight record (decision-log D9/D11).
