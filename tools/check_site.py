@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import json
 import re
+import socket
 import sys
 import urllib.error
 import urllib.request
@@ -48,7 +49,6 @@ MANIFEST = {
 SVG_EXEMPT = {"links.html"}
 STEPS_EXEMPT = {"index.html"}
 STEP_LIMIT = 5
-MAX_STEPS = STEP_LIMIT + 1  # checker fails above this count
 
 EA_LINK = "https://equationalapplications.com"
 MIT_MARK = "MIT"
@@ -159,13 +159,12 @@ def check_page(html5lib, path: Path, topic: str) -> str | None:
     if not metas:
         fail(f"{path.name}: missing viewport <meta>")
 
-    # data-topic manifest
-    containers = findall("html") + findall("body")
-    found_topic = None
-    for el in containers:
-        if el.get("data-topic"):
-            found_topic = el.get("data-topic")
-            break
+    # data-topic manifest (root <html> or <body>; .// misses the root)
+    found_topic = root.get("data-topic")
+    if not found_topic:
+        body = root.find(".//{http://www.w3.org/1999/xhtml}body")
+        if body is not None and body.get("data-topic"):
+            found_topic = body.get("data-topic")
     if found_topic != topic:
         fail(f"{path.name}: data-topic is {found_topic!r}, expected {topic!r}")
 
@@ -176,7 +175,7 @@ def check_page(html5lib, path: Path, topic: str) -> str | None:
     # Step counter (total top-level <ol><li> per page; landing exempt)
     if path.name not in STEPS_EXEMPT:
         steps = walk_top_level_ol_li(root)
-        if steps > MAX_STEPS:
+        if steps > STEP_LIMIT:
             fail(f"{path.name}: {steps} top-level <ol> steps (limit {STEP_LIMIT})")
 
     # Scripts: zero, or exactly one real GoatCounter tag
@@ -215,7 +214,10 @@ def footer_of(raw: str) -> str:
 
 
 def check_external(url: str) -> str:
-    """Returns 'OK', 'WARN', or 'FAIL'."""
+    """Returns 'OK', 'WARN', or 'FAIL'.
+    404 = FAIL immediately; DNS resolution failure = FAIL after one retry;
+    410 = FAIL after one retry; other HTTP errors (429/5xx/403/401) and
+    timeouts/connection errors = WARN (escalation handled by the caller)."""
     for attempt in range(2):
         try:
             req = urllib.request.Request(url, headers={"User-Agent": UA}, method="GET")
@@ -225,13 +227,20 @@ def check_external(url: str) -> str:
                 code = resp.status
         except urllib.error.HTTPError as exc:
             code = exc.code
-        except (urllib.error.URLError, TimeoutError, ConnectionError, OSError):
-            return "WARN:DNS" if attempt else "WARN"
+        except urllib.error.URLError as exc:
+            if isinstance(getattr(exc, "reason", None), socket.gaierror):
+                # DNS resolution failure — hard after one retry
+                if attempt == 0:
+                    continue
+                return "FAIL"
+            return "WARN"
+        except (TimeoutError, ConnectionError, OSError):
+            return "WARN"
         if code == 404:
             return "FAIL"
+        if code == 410 and attempt == 0:
+            continue
         if code == 410:
-            if attempt == 0:
-                continue
             return "FAIL"
         return "WARN"
     return "WARN"
@@ -258,9 +267,12 @@ def main() -> int:
 
     missing = [f for f in MANIFEST if not (SITE / f).exists()]
     if missing:
-        print(f"SKIP: site not ready — {len(missing)}/{len(MANIFEST)} manifest files "
-              f"absent (first: {missing[0]}). Nothing to check yet.")
-        return 0
+        if len(missing) == len(MANIFEST):
+            print(f"SKIP: site not ready — no manifest files exist yet. "
+                  f"Nothing to check.")
+            return 0
+        fail(f"manifest files missing from site/ (deleted or never built): "
+             f"{', '.join(sorted(missing))}")
 
     raws: dict[str, str] = {}
     for fname, topic in MANIFEST.items():
@@ -268,17 +280,20 @@ def main() -> int:
         if raw is not None:
             raws[fname] = raw
 
-    # Footer: byte-identical across manifest AND content-bearing
+    # Footer: present, byte-identical across manifest, AND content-bearing
     footers = {f: footer_of(r) for f, r in raws.items()}
+    absent = [f for f, ft in footers.items() if not ft]
+    if absent:
+        fail(f"pages missing a <footer> block: {', '.join(sorted(absent))}")
     distinct = set(footers.values())
-    if len(distinct) != 1:
+    if len(distinct - {""}) != 1:
         fail(f"footer blocks are not byte-identical across manifest pages "
-             f"({len(distinct)} distinct)")
-    elif distinct and distinct.pop():
-        sample = next(iter(footers.values()))
-        if EA_LINK not in sample:
+             f"({len(distinct - {''})} distinct)")
+    footer_sample = next((ft for ft in footers.values() if ft), "")
+    if footer_sample:
+        if EA_LINK not in footer_sample:
             fail("footer is missing the EA link")
-        if MIT_MARK not in sample:
+        if MIT_MARK not in footer_sample:
             fail("footer is missing the MIT statement")
 
     # Non-manifest root HTML files: no scripts
@@ -289,9 +304,12 @@ def main() -> int:
         if SCRIPT_RE.search(extra.read_text(encoding="utf-8")):
             fail(f"{extra.name}: non-manifest HTML must contain no <script>")
 
-    # Redaction grep + token patterns over ALL of site/ (not just manifest)
+    # Redaction grep + token patterns over ALL of site/ (manifest pages were
+    # already scanned individually — skip them here to avoid double reports)
+    manifest_paths = {(SITE / f).resolve() for f in MANIFEST}
     for f in SITE.rglob("*"):
-        if f.is_file() and f.suffix in {".html", ".css", ".js", ".svg", ".txt"}:
+        if f.is_file() and f.resolve() not in manifest_paths \
+                and f.suffix in {".html", ".css", ".js", ".svg", ".txt"}:
             text = f.read_text(encoding="utf-8", errors="replace")
             for pattern, label in REDACTION_PATTERNS:
                 if pattern.search(text):

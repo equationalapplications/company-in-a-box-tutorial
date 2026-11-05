@@ -24,6 +24,13 @@ jobs:
           python-version: "3.12"
       - name: Install checker dependencies
         run: pip install -r tools/requirements-dev.txt
+      - name: Restore link-warning streak state
+        uses: actions/cache@v4
+        with:
+          path: tools/.link-state.json
+          key: link-state-run-${{ github.run_id }}
+          restore-keys: |
+            link-state-
       - name: Run site checker
         run: python tools/check_site.py --check-external
 
