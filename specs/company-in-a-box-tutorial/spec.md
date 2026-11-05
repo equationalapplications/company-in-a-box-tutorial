@@ -28,6 +28,7 @@ Evidence:
 - SynapseTree.dev is live (HTTP 200, fetched 2026-11-05) and positions itself
   as the hosted, team-shared memory of the same family — the correct "next
   step when you have a team" destination the tutorial should point at.
+- `equationalapplications.com` is live (HTTP 200, 2026-11-05).
 - EA's delivery-flow procedures live in its private agent vault — no public
   equivalent exists.
 
@@ -73,7 +74,7 @@ A post-deploy check asserts `https://<site>/specs/...` returns 404.
 |---|------|---------|-------------|------------------|
 | 1 | `index.html` | Overview: what a company in a box is; why use it; where to start | Box diagram: you + memory + integrations + agent = a company | (links verified live) |
 | 2 | `the-pattern.html` | The pattern: one person directing agent roles (executive, workers, reviewers) | Org chart: you → executive agent → delegated workers | EA's real one-person org; CTI INTENT.md "From one agent to a team" |
-|  3 | `the-three-tools.html` | Meet the three tools, one glance each | Three-tool triangle feeding one company | CT INTENT.md; CTI INTENT.md; Hermes docs |
+| 3 | `the-three-tools.html` | Meet the three tools, one glance each | Three-tool triangle feeding one company | CT INTENT.md; CTI INTENT.md; Hermes docs |
 | 4 | `setup-hermes.html` | Install Hermes Agent and get a first response | Install flow: prompt → profile → agent | Hermes docs install section + EA's live profile |
 | 5 | `setup-memory.html` | Install Curated Thoughts (the brain-and-vault idea explained inline only as far as the install needs) | Brain/vault diagram: files → facts → recall | CT repo + EA's internal CT installation runbook (fact-check only) |
 | 6 | `connect-memory.html` | Register Curated Thoughts as the agent's MCP memory server | Agent ↔ sidecar ↔ vault wiring | CTI repo (Hermes integration) + Hermes MCP docs |
@@ -98,10 +99,12 @@ margins), footer block duplicated per page (no build step, so no includes —
 kept identical by `tools/check_site.py`), `LICENSE`, `README.md`,
 `.github/workflows/pages.yml` (upload `site/` only, deploy on push to
 `main`), `.github/workflows/check.yml` (runs `tools/check_site.py` on PRs
-and on a schedule, plus the post-deploy boundary check: fetch the published
-URL's `/specs/...` path and assert 404), `tools/check_site.py` (dev-only
-checker: link check, footer diff, `data-topic` manifest check, step
-counting, SVG presence, structural check, strict HTML parse),
+and on a schedule — plus the post-deploy boundary check: fetch the published
+URL's `/specs/...` path and assert 404; that check runs on `schedule` and
+after `pages.yml` completes via `workflow_run`, skipped on `pull_request`,
+where the published site is still the old deploy), `tools/check_site.py`
+(dev-only checker: link check, footer diff, `data-topic` manifest check,
+step counting, SVG presence, structural check, strict HTML parse),
 `tools/requirements-dev.txt` (`html5lib` pin for the checker).
 
 ### Sign-off table (the manual gates)
@@ -221,8 +224,10 @@ full branch, not its current commits.
    13-row table confirming content matches its topic. The Alignment section
    therefore claims a machine-checked topic manifest PLUS a manual
    sign-off — not a fully automated guarantee.
-4. **Analytics check** — the GoatCounter script appears exactly once per page
-   and is the only third-party script anywhere on the site.
+4. **Analytics check** — the GoatCounter script appears exactly once per
+   manifest page and is the only third-party script on any manifest page;
+   non-manifest root HTML files (e.g. the Search Console verification file)
+   are additionally asserted to contain no `<script>` at all.
 5. **Visual check** — render each page in the local browser over CDP and
    screenshot; confirm white space, readable hierarchy, SVGs render.
 6. **Deploy check** — Pages workflow run green on `main` after merge; the
