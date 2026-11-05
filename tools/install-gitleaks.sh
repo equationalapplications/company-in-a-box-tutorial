@@ -7,7 +7,8 @@ VERSION="8.30.1"
 curl -fsSL --max-time 60 -o /tmp/gl.tar.gz \
   "https://github.com/gitleaks/gitleaks/releases/download/v${VERSION}/gitleaks_${VERSION}_linux_x64.tar.gz"
 curl -fsSL --max-time 60 -o /tmp/checksums.txt \
-  "https://github.com/gitleaks/gitleaks/releases/download/v${VERSION}/checksums.txt"
-grep "gitleaks_${VERSION}_linux_x64.tar.gz" /tmp/checksums.txt | (cd /tmp && sha256sum -c -)
+  "https://github.com/gitleaks/gitleaks/releases/download/v${VERSION}/gitleaks_${VERSION}_checksums.txt"
+expected=$(grep "gitleaks_${VERSION}_linux_x64.tar.gz" /tmp/checksums.txt | awk '{print $1}')
+echo "${expected}  /tmp/gl.tar.gz" | sha256sum -c -
 sudo tar -xzf /tmp/gl.tar.gz -C /usr/local/bin gitleaks
 gitleaks version
