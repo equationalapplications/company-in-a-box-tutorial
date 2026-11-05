@@ -28,6 +28,10 @@ Evidence:
 - EA's delivery-flow procedures live in its private agent vault — no public
   equivalent exists.
 
+All live-URL evidence above was captured 2026-11-05 and is re-runnable:
+`tools/check_site.py` (implementation) re-verifies every external target on
+every test run; repo links were verified via `gh repo list`.
+
 ## Proposed change
 
 Build a multi-page, no-build-step static site (plain HTML + CSS + hand-authored
@@ -46,7 +50,9 @@ A post-deploy check asserts `https://<site>/specs/...` returns 404.
   with it.
 - Each following page teaches ONE small thing in a few steps (target: ≤ 5
   numbered steps per page, and exactly one topic per page — its own row in
-  the page map).
+  the page map). Every page carries a `data-topic` attribute matching its
+  page-map row, so a machine can check one-topic-per-page; a human reviewer
+  signs off on the same table as a second gate.
 - Generous white space; no dense multi-column text walls.
 - Infographics used widely (one per page where the page map promises one).
 - No JavaScript required to learn from the site (analytics is a single
@@ -70,11 +76,17 @@ A post-deploy check asserts `https://<site>/specs/...` returns 404.
 | 12 | `team-memory.html` | Outgrow one brain: team AI memory at SynapseTree.dev | One vault → cloud sync → team agents | synapsetree.dev (verified live) |
 | 13 | `links.html` | All repos, docs, websites, license, attribution | (Link list; icon accents only) | every target re-verified at build |
 
+Every `site/*.html` page (except `index.html`, topic `overview`) carries
+`data-topic="<page-map #>"`; `tools/check_site.py` fails the build if any
+page's topic attribute is missing or duplicated.
+
 Shared assets: `site/css/style.css` (single stylesheet, light palette, large
 margins), footer block duplicated per page (no build step, so no includes —
-kept identical by the link-check/consistency script), `LICENSE`, `README.md`,
+kept identical by `tools/check_site.py`), `LICENSE`, `README.md`,
 `.github/workflows/pages.yml` (upload `site/` only, deploy on push to
-`main`).
+`main`), `tools/check_site.py` (dev-only checker: link check, footer diff,
+`data-topic` manifest check, strict HTML parse), `tools/requirements-dev.txt`
+(`html5lib` pin for the checker).
 
 ### Content commitments
 
@@ -110,7 +122,8 @@ kept identical by the link-check/consistency script), `LICENSE`, `README.md`,
 The spec serves INTENT.md directly: it operationalizes the central design
 intent (small bites, white space, few steps per page, infographics widely,
 overview-only landing — the page map gives every page exactly one topic and
-the test plan enforces it), follows all seven rules (analytics choice honors
+the test plan enforces it with a machine-checked `data-topic` manifest plus
+manual reviewer sign-off), follows all seven rules (analytics choice honors
 rule 6; the grounding mandate implements rule 4), and respects every non-goal
 (no build step, no marketing content, no tool docs duplication). No
 departures from INTENT.md.
@@ -127,6 +140,13 @@ departures from INTENT.md.
 - `.github/workflows/pages.yml` (uploads `site/` only)
 - `README.md`, `LICENSE` (license already on main; README added by this PR)
 - Search Console verification HTML file (`site/`; added at implementation)
+- `tools/check_site.py`, `tools/requirements-dev.txt` (added at
+  implementation)
+
+Scope note: this PR is the one-PR lifecycle — the spec lands first (this
+branch), and `site/`, `tools/`, the workflow, and `README.md` are added on
+this same branch after the plan gate. "This PR" in this document means the
+full branch, not its current commits.
 
 ## Test plan
 
@@ -139,8 +159,12 @@ departures from INTENT.md.
    GET fallback); footer identical on all 13 pages (diff check).
 3. **Design-law check** — each non-landing page's numbered steps ≤ 5; each
    page contains at least one inline SVG where the page map promises one;
-   **single-topic check**: each page's content is judged against exactly its
-   page-map row at test sign-off (reviewer initials the 13-row table).
+   **single-topic check** — mechanical part: `tools/check_site.py` verifies
+   every page's `data-topic` attribute against the page-map manifest (missing
+   or duplicated topic = failure); human part: the reviewer initials the
+   13-row table confirming content matches its topic. The Alignment section
+   therefore claims a machine-checked topic manifest PLUS a manual
+   sign-off — not a fully automated guarantee.
 4. **Analytics check** — the GoatCounter script appears exactly once per page
    and is the only third-party script anywhere on the site.
 5. **Visual check** — render each page in the local browser over CDP and
