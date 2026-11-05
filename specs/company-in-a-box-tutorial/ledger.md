@@ -24,14 +24,17 @@ file is the authoritative in-flight state (decision-log D11).
 
 | Step | Deliverable | Commit | State |
 |------|-------------|--------|-------|
-| 0 | Ledger (this file) | — | this commit |
-| 1 | `tools/check_site.py` + `tools/requirements-dev.txt` | — | pending |
-| 2 | `.github/workflows/check.yml` | — | pending |
-| 3 | `site/css/style.css` | — | pending |
-| 4 | 13 pages (one commit each, page-map order) | — | pending |
-| 5 | sign-off (non-author reviewer) | — | pending |
-| 6 | `.github/workflows/pages.yml` + deploy verify | — | pending |
-| 7 | `README.md` | — | pending |
+| 0 | Ledger (this file) | (this folder) | live — updated per stage |
+| 1 | `tools/check_site.py` + `tools/requirements-dev.txt` | `a5b054d` + checker fixes | DONE — PASS on 13 pages (offline + external) |
+| 2 | `.github/workflows/check.yml` | `a5b054d` | DONE |
+| 3 | `site/css/style.css` | `3d7907b` | DONE |
+| 4 | 13 pages (one commit each, page-map order) | `36f16b2`…`1946bbc` | DONE — checker PASS |
+| 5 | sign-off (non-author reviewer) | — | IN PROGRESS — receipts filled, signature pending |
+| 6 | `.github/workflows/pages.yml` + deploy verify | (this batch) | workflow written; deploy verify after merge |
+| 7 | `README.md` | (this batch) | DONE |
+
+Visual check (spec test 5): index + the-pattern rendered over CDP, screenshots
+inspected 2026-11-05 — white space, hierarchy, step styling, header/footer OK.
 
 ## Open items
 

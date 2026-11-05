@@ -60,7 +60,7 @@ SCRIPT_RE = re.compile(r"<script\b", re.I)
 
 REDACTION_PATTERNS = [
     (re.compile(r"/home/", re.I), "vault path fragment: /home/"),
-    (re.compile(r"~/"), "vault path fragment: ~/"),
+    (re.compile(r"~/(?!\.)"), "vault path fragment: ~/<non-dotfile>"),
     (re.compile(r"immutable-source-files", re.I), "vault tree: immutable-source-files"),
     (re.compile(r"documents/equational-wiki", re.I), "vault tree: documents/equational-wiki"),
 ]
@@ -99,9 +99,13 @@ def load_html5lib():
 
 
 def parse_strict(html5lib, text: str):
-    """Parse with html5lib in a strict-ish mode: collect parse errors."""
-    parser = html5lib.HTMLParser(strict=True)
-    return parser.parse(text, treebuilder="etree")
+    """Parse via the documented tree-in-constructor pattern (passing
+    treebuilder= to parse() misroutes the kwarg into the input stream),
+    collecting the parser's spec-error list."""
+    treebuilder = html5lib.getTreeBuilder("etree")
+    parser = html5lib.HTMLParser(tree=treebuilder)
+    root = parser.parse(text)
+    return root, getattr(parser, "errors", [])
 
 
 def walk_top_level_ol_li(root) -> int:
@@ -132,9 +136,13 @@ def check_page(html5lib, path: Path, topic: str) -> str | None:
 
     # Strict parse
     try:
-        root = parse_strict(html5lib, raw)
-    except Exception as exc:  # html5lib strict raises ValueError on bad markup
+        root, parse_errors = parse_strict(html5lib, raw)
+    except Exception as exc:  # catastrophic parse failure
         fail(f"{path.name}: strict parse error: {exc}")
+        return None
+    if parse_errors:
+        sample = "; ".join(f"{pos}: {msg}" for pos, msg in parse_errors[:3])
+        fail(f"{path.name}: {len(parse_errors)} markup error(s) — {sample}")
         return None
 
     def findall(tag):
