@@ -48,9 +48,11 @@ A post-deploy check asserts `https://<site>/specs/...` returns 404.
 
 - Landing page = overview: what it is, why to use it. Nothing else competes
   with it.
-- Each following page teaches ONE small thing in a few steps (target: ≤ 5
-  numbered steps per page, and exactly one topic per page — its own row in
-  the page map). Every page carries a `data-topic` attribute matching its
+- Each following page teaches ONE small thing in a few steps. "Steps" is
+  defined mechanically: the count of top-level `li` children of `ol` elements
+  with class `steps` — target ≤ 5 per page, checked by `tools/check_site.py`
+  (nested lists don't count). Exactly one topic per page — its own row in
+  the page map. Every page carries a `data-topic` attribute matching its
   page-map row, so a machine can check one-topic-per-page; a human reviewer
   signs off on the same table as a second gate.
 - Generous white space; no dense multi-column text walls.
@@ -76,9 +78,12 @@ A post-deploy check asserts `https://<site>/specs/...` returns 404.
 | 12 | `team-memory.html` | Outgrow one brain: team AI memory at SynapseTree.dev | One vault → cloud sync → team agents | synapsetree.dev (verified live) |
 | 13 | `links.html` | All repos, docs, websites, license, attribution | (Link list; icon accents only) | every target re-verified at build |
 
-Every `site/*.html` page (except `index.html`, topic `overview`) carries
-`data-topic="<page-map #>"`; `tools/check_site.py` fails the build if any
-page's topic attribute is missing or duplicated.
+Every one of the 13 page-map files carries `data-topic="<page-map #>"`
+(`index.html` included, topic `1`); `tools/check_site.py` fails the build if
+any page's topic attribute is missing or duplicated. **The checker's manifest
+covers exactly those 13 files** — the Search Console verification HTML file
+is a bare Google-format page with no topic or footer, so it is excluded from
+the manifest, footer-identity, and analytics checks by name.
 
 Shared assets: `site/css/style.css` (single stylesheet, light palette, large
 margins), footer block duplicated per page (no build step, so no includes —
@@ -99,6 +104,13 @@ kept identical by `tools/check_site.py`), `LICENSE`, `README.md`,
   docs/repos and EA's actual Tessera configuration) before it is written.
   Reviewers on the ladder are briefed to verify against the real setup, not
   plausibility. Goals: accuracy, clearness, friendliness.
+- **Redaction rule (private sources):** EA's private vault material is
+  consulted for ACCURACY only — published text states the generic pattern:
+  no vault paths, no procedure text quoted, no internal agent names or
+  config values beyond what EA's public repos already show. The public
+  repos' own INTENT.md/CONTRIBUTING files and the tools' public docs are the
+  citable sources; the private vault is the fact-checker, never the source.
+  The 13-row sign-off table includes a redaction checkbox per page.
 - The worked example is honest: describes EA's real practice (memory sidecar,
   spec-driven delivery flow, review ladder, scheduled jobs) at the level a
   newcomer can copy; no secrets, no client material.
@@ -108,9 +120,15 @@ kept identical by `tools/check_site.py`), `LICENSE`, `README.md`,
 ### Analytics (Kurt ruling, 2026-11-05: option 1)
 
 - **GoatCounter** — free hosted service "for reasonable public usage"
-  (personal sites and small-to-medium businesses fine — verified on
-  goatcounter.com, 2026-11-05). Cookieless, ~3.5KB, single script tag per
-  page, no GDPR consent notice needed; a JavaScript-free pixel is the
+  (personal sites and small-to-medium businesses fine). Captured verbatim
+  from https://www.goatcounter.com on 2026-11-05: "GoatCounter.com is
+  currently offered for free for reasonable public usage. Running your
+  personal website or small-to-medium business on it is fine, but sending
+  millions of pageviews/day isn't." Cookieless, ~3.5KB, single script tag
+  per page. GoatCounter states it "doesn't need a GDPR notice" (their
+  privacy design: no cookies, no personal-data tracking) — that is the
+  vendor's claim plus our assessment, not a legal opinion; if this ever
+  matters commercially, flag for counsel. A JavaScript-free pixel is the
   documented fallback if we ever want zero scripts.
 - **Google Search Console** — ownership verified by a single HTML verification
   file in `site/`; no page scripts.
@@ -124,9 +142,12 @@ intent (small bites, white space, few steps per page, infographics widely,
 overview-only landing — the page map gives every page exactly one topic and
 the test plan enforces it with a machine-checked `data-topic` manifest plus
 manual reviewer sign-off), follows all seven rules (analytics choice honors
-rule 6; the grounding mandate implements rule 4), and respects every non-goal
-(no build step, no marketing content, no tool docs duplication). No
-departures from INTENT.md.
+rule 6; the grounding mandate implements rule 4, with the redaction rule
+making explicit what INTENT.md's non-goal always implied: private material
+checks facts, public sources carry citations). The redaction rule is a
+clarification of INTENT.md's non-goal, not a departure from it. It respects
+every other non-goal (no build step, no marketing content, no tool docs
+duplication). No departures from INTENT.md.
 
 ## Files touched
 
@@ -154,9 +175,14 @@ full branch, not its current commits.
    mode (dev-only dependency; raises on malformed markup — `html.parser` is
    lenient and passes broken tags), plus a structural check (single `<h1>`,
    `<title>`, viewport meta present).
-2. **Link check** — script walks all pages: every internal `href` resolves to
-   an existing file/anchor; every external URL returns HTTP < 400 (curl HEAD,
-   GET fallback); footer identical on all 13 pages (diff check).
+2. **Link check** — `tools/check_site.py` walks all pages: every internal
+   `href` resolves to an existing file/anchor; every external URL is checked
+   (curl HEAD, GET fallback, 2 retries; 429/5xx recorded as WARNINGS, not
+   failures, so a third-party hiccup never blocks the site). The link check
+   runs on PRs and as a scheduled job — it is NOT a step in the Pages deploy
+   workflow, so deploys never gate on third-party availability. Footer
+   identical on all 13 page-map files (diff check; verification file
+   excluded).
 3. **Design-law check** — each non-landing page's numbered steps ≤ 5; each
    page contains at least one inline SVG where the page map promises one;
    **single-topic check** — mechanical part: `tools/check_site.py` verifies
