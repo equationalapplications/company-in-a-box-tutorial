@@ -11,11 +11,11 @@ file is the authoritative in-flight state (decision-log D11).
 
 | Gate | Status | Evidence |
 |------|--------|----------|
-| Design dialogue | DONE | D1–D5, Discord thread 2026-11-05 |
-| Spec (general) | DONE | msg 1567915303479017656 |
-| Cost-escalatory spec review | DONE | D9: T1.5 ladder + T3 Opus + T4 Fable + delta verify, $4.02 of $8.50 |
-| Spec gate | DONE | msg 1567942439455686788 (option 1) |
-| Plan gate | DONE | msg 1567943892282908773 (option 1 + SDD folder pattern ruling → D11) |
+| Design dialogue | DONE | owner rulings in the founding thread, 2026-11-05 |
+| Spec (general) | DONE | owner message, 2026-11-05 |
+| Cost-escalatory spec review | DONE | D9: T1.5 ladder + T3 Opus + T4 Fable + delta verify, within announced budget |
+| Spec gate | DONE | owner message, 2026-11-05 |
+| Plan gate | DONE | owner message, 2026-11-05 + SDD folder pattern ruling → D11 |
 | Implementation | IN PROGRESS | commit map below |
 | Review ladder (implemented diff) | PENDING | after implementation |
 | Merge | PENDING | Kurt's go |
@@ -41,5 +41,5 @@ inspected 2026-11-05 — white space, hierarchy, step styling, header/footer OK.
 - GoatCounter account: Tessera preps, Kurt clicks signup. Site ships ZERO
   scripts until then; tag lands as a follow-up commit after.
 - Search Console verification file: lands when Kurt creates the property.
-- Board note: `tessera-delivery-flow-board` SKILL.md at 100K-char limit —
-  this ledger is the in-flight record (D9/D11).
+- Board note: the delivery-board skill file is at its size limit — this
+  ledger is the in-flight record (decision-log D9/D11).

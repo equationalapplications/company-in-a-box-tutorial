@@ -108,6 +108,38 @@ class TestExternalClassification(unittest.TestCase):
             self.assertEqual(cs.check_external("https://x.test/a"), "WARN")
 
 
+class TestStreakGate(unittest.TestCase):
+    """apply_link_result: streak advances on scheduled runs only."""
+
+    def test_pr_runs_never_escalate(self):
+        counts = {}
+        for _ in range(10):
+            outcome = cs.apply_link_result(counts, "https://x.test", "WARN",
+                                           advance=False)
+            self.assertEqual(outcome, "warn")
+            self.assertEqual(counts, {})
+
+    def test_scheduled_runs_escalate_on_third(self):
+        counts = {}
+        outcomes = [cs.apply_link_result(counts, "https://x.test", "WARN",
+                                         advance=True) for _ in range(3)]
+        self.assertEqual(outcomes, ["warn", "warn", "fail"])
+
+    def test_ok_clears_streak(self):
+        counts = {"https://x.test": 2}
+        outcome = cs.apply_link_result(counts, "https://x.test", "OK",
+                                       advance=True)
+        self.assertEqual(outcome, "ok")
+        self.assertEqual(counts, {})
+
+    def test_fail_clears_streak_and_fails(self):
+        counts = {"https://x.test": 2}
+        outcome = cs.apply_link_result(counts, "https://x.test", "FAIL",
+                                       advance=True)
+        self.assertEqual(outcome, "fail")
+        self.assertEqual(counts, {})
+
+
 class TestCheckPage(unittest.TestCase):
     def setUp(self):
         self.html5lib = cs.load_html5lib()

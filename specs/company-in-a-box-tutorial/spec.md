@@ -1,8 +1,7 @@
 # Spec — company-in-a-box-tutorial static site
 
-Status: Draft (ladder complete: T1.5 converged APPROVE-WITH-NITS → T3 Opus
-folded → T4 Fable folded → Opus delta verification folded; awaiting Kurt's
-spec gate)
+Status: Approved by Kurt 2026-11-05 (owner message in the founding thread);
+ladder complete before approval. This file records the approved spec.
 Owner: Tessera — EA's executive agent (decision-log header: "Tessera is the
 model, not just the author"; naming sanctioned by D2/D8)
 Date: 2026-11-05
@@ -253,7 +252,7 @@ full branch, not its current commits.
 2. **Link check** — `tools/check_site.py` walks the 13 manifest pages: every
    internal `href` resolves to an existing file/anchor; every external URL is
    checked from Python (`urllib` with a real browser user-agent — no curl
-   binary dependency, GET fallback, 2 retries). Classification: 404 and DNS
+   binary dependency, GET fallback; DNS and 410 get one retry). Classification: 404 and DNS
    resolution failure are HARD FAILURES; 410 (gone) is a hard failure after
    one retry; 429/5xx/403/401/timeouts/connection errors are WARNINGS that
    ESCALATE to failures if the same URL warns on 3 consecutive scheduled

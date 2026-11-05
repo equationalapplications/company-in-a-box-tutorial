@@ -28,20 +28,17 @@
   <p>The connection uses <span class="term">MCP</span> (Model Context
   Protocol) — a standard way for agents to use outside tools. Curated
   Thoughts ships a small helper program called the
-  <span class="term">sidecar</span> that speaks MCP: the app binary doubles
-  as an MCP server, so your agent sees the vault as native tools — semantic
-  recall, wiki search, and more.</p>
+  <span class="term">sidecar</span> that speaks MCP: your agent sees the
+  vault as native tools — semantic recall, wiki search, and more.</p>
 
   <ol class="steps">
     <li>Open <code>~/.hermes/config.yaml</code> and add an
     <code>mcp_servers</code> entry that launches the Curated Thoughts MCP
-    server:<br>
-    <code>mcp_servers:<br>
-    &#160;&#160;curated-thoughts:<br>
-    &#160;&#160;&#160;&#160;command: "curated-thoughts-mcp"<br>
-    &#160;&#160;&#160;&#160;args: ["--mcp"]</code><br>
-    (the shape of this block — a <code>command</code> plus
-    <code>args</code> — is the standard Hermes MCP registration)</li>
+    server (this is the exact block the integration's own installer writes):<br>
+    <pre><code>mcp_servers:
+  curated-thoughts:
+    command: curated-thoughts-mcp
+    args: ["--mcp"]</code></pre></li>
     <li>Restart Hermes so it discovers the new server's tools.</li>
     <li>Verify: ask your agent something only the memory would know —
     "search my vault for what I said about X". If it comes back with your

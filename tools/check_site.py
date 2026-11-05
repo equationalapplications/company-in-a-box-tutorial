@@ -16,6 +16,7 @@ Exit codes: 0 = pass (or "site not ready" skip), 1 = failures found.
 """
 from __future__ import annotations
 
+import http.client
 import json
 import os
 import re
@@ -208,11 +209,11 @@ def check_page(html5lib, path: Path, topic: str) -> str | None:
             fail(f"{path.name}: internal href '{href}' does not resolve")
         elif anchor and file_part:
             target_raw = (SITE / file_part).read_text(encoding="utf-8")
-            if f'id="{anchor}"' not in target_raw:
+            if not re.search(rf'\sid=["\']{re.escape(anchor)}["\']', target_raw):
                 fail(f"{path.name}: internal href '{href}' anchor missing in "
                      f"{file_part}")
         elif anchor:
-            if f'id="{anchor}"' not in raw:
+            if not re.search(rf'\sid=["\']{re.escape(anchor)}["\']', raw):
                 fail(f"{path.name}: anchor '#{anchor}' missing on this page")
 
     # Redaction grep
@@ -252,7 +253,7 @@ def check_external(url: str) -> str:
                     continue
                 return "FAIL"
             return "WARN"
-        except (TimeoutError, ConnectionError, OSError):
+        except (http.client.HTTPException, TimeoutError, ConnectionError, OSError):
             return "WARN"
         if code == 404:
             return "FAIL"
@@ -275,6 +276,27 @@ def load_state() -> dict:
 
 def save_state(state: dict) -> None:
     STATE_FILE.write_text(json.dumps(state, indent=1, sort_keys=True))
+
+
+def apply_link_result(warn_counts: dict, url: str, result: str,
+                      advance: bool) -> str:
+    """Update the streak state for one URL result.
+    Returns 'ok' | 'warn' | 'fail'. The streak advances ONLY on scheduled
+    runs (advance=True) — transient warnings across PR pushes never fail
+    a PR (spec test 2)."""
+    if result == "OK":
+        if advance:
+            warn_counts.pop(url, None)
+        return "ok"
+    if result == "FAIL":
+        warn_counts.pop(url, None)
+        return "fail"
+    if advance:
+        warn_counts[url] = warn_counts.get(url, 0) + 1
+        if warn_counts[url] >= WARN_ESCALATE_AFTER:
+            return "fail"
+        return "warn"
+    return "warn"
 
 
 def main() -> int:
@@ -371,20 +393,11 @@ def main() -> int:
         for raw in raws.values():
             urls.update(re.findall(r'href="(https?://[^"]+)"', raw))
         for url in sorted(urls):
-            result = check_external(url)
-            if result == "OK":
-                if advance_streak:
-                    warn_counts.pop(url, None)
-            elif result == "FAIL":
-                fail(f"external link hard failure (404/DNS): {url}")
-                warn_counts.pop(url, None)
-            else:
-                if advance_streak:
-                    warn_counts[url] = warn_counts.get(url, 0) + 1
-                    if warn_counts[url] >= WARN_ESCALATE_AFTER:
-                        fail(f"external link warned {warn_counts[url]} consecutive "
-                             f"scheduled runs, escalating: {url}")
-                        continue
+            result = apply_link_result(warn_counts, url, result=check_external(url),
+                                       advance=advance_streak)
+            if result == "fail":
+                fail(f"external link failed (404/DNS or escalated): {url}")
+            elif result == "warn":
                 warn(f"external link warning: {url}")
         if advance_streak:
             save_state(state)

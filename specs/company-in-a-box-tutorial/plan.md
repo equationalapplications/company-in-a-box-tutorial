@@ -1,6 +1,6 @@
 # Plan — company-in-a-box-tutorial static site
 
-Status: Draft (awaiting Kurt's plan gate)
+Status: Approved by Kurt 2026-11-05 (with the D11 SDD-folder-pattern ruling).
 Owner: Tessera
 Date: 2026-11-05
 Spec: [spec.md](spec.md) (ladder-complete, approved 2026-11-05)
