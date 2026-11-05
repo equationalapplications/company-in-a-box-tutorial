@@ -112,8 +112,9 @@ def parse_strict(html5lib, text: str):
 
 def walk_top_level_ol_li(root) -> int:
     """Count <li> children of top-level-in-body <ol> elements (not nested
-    inside another <ol>/<ul>). Namespace-agnostic (html5lib namespaced,
-    plain ET in tests)."""
+    inside another <ol>). Lists nested inside <ul> ARE counted (a deliberate
+    choice: <ul> is not a step list, so an <ol> under it starts a new step
+    sequence). Namespace-agnostic (html5lib namespaced, plain ET in tests)."""
     count = 0
     body = None
     for el in root.iter():
@@ -264,8 +265,11 @@ def check_external(url: str) -> str:
 
 
 def load_state() -> dict:
-    if STATE_FILE.exists():
-        return json.loads(STATE_FILE.read_text())
+    try:
+        if STATE_FILE.exists():
+            return json.loads(STATE_FILE.read_text())
+    except (json.JSONDecodeError, OSError):
+        pass  # corrupt state = start fresh; escalation just needs to rebuild
     return {}
 
 
@@ -284,9 +288,9 @@ def main() -> int:
 
     missing = [f for f in MANIFEST if not (SITE / f).exists()]
     if missing:
-        if len(missing) == len(MANIFEST):
-            print(f"SKIP: site not ready — no manifest files exist yet. "
-                  f"Nothing to check.")
+        allow_empty = "--allow-empty-site" in sys.argv
+        if allow_empty and len(missing) == len(MANIFEST):
+            print("SKIP: --allow-empty-site set and no manifest files exist.")
             return 0
         fail(f"manifest files missing from site/ (deleted or never built): "
              f"{', '.join(sorted(missing))}")
@@ -337,15 +341,24 @@ def main() -> int:
                 if pattern.search(text):
                     fail(f"{f.relative_to(REPO)}: possible secret — {label}")
 
-    # Optional gitleaks
+    # Optional gitleaks (mandatory in CI — spec: "any hit fails the check").
+    # gitleaks exits 1 when it finds leaks, so ANY non-zero exit fails here.
+    import os
     import shutil
-    if shutil.which("gitleaks"):
+    gitleaks = shutil.which("gitleaks")
+    if gitleaks:
         import subprocess
+        # No report flags: default stdout output is stable across versions
+        # (report formats changed between 8.28 and 8.30). gitleaks exits 1
+        # when it finds leaks, so ANY non-zero exit fails here.
         proc = subprocess.run(
-            ["gitleaks", "git", "--no-banner", "--report-format", "text",
-             "--report-path", "-"], cwd=REPO, capture_output=True, text=True)
-        if proc.returncode == 0 and proc.stdout.strip():
-            fail(f"gitleaks findings:\n{proc.stdout}")
+            [gitleaks, "git", "--no-banner", "--redact"],
+            cwd=REPO, capture_output=True, text=True)
+        if proc.returncode != 0:
+            fail(f"gitleaks findings (exit {proc.returncode}):\n"
+                 f"{proc.stdout}\n{proc.stderr}")
+    elif os.environ.get("GITHUB_ACTIONS") == "true":
+        fail("gitleaks binary not found in CI — the secret gate is mandatory")
 
     # External links
     if check_external_links:
