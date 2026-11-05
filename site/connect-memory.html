@@ -50,7 +50,8 @@
       <rect x="40" y="45" width="130" height="56" rx="10" fill="#ffffff" stroke="#2f6f4f" stroke-width="2"/>
       <text x="105" y="70" text-anchor="middle" font-family="system-ui" font-size="13" fill="#1f2430">Hermes Agent</text>
       <text x="105" y="88" text-anchor="middle" font-family="system-ui" font-size="11" fill="#5a6272">calls memory tools</text>
-      <line x1="170" y1="73" x2="225" y2="73" stroke="#5a6272" stroke-width="2"/>
+      <line x1="170" y1="73" x2="220" y2="73" stroke="#5a6272" stroke-width="2"/>
+      <polygon points="225,73 215,68 215,78" fill="#5a6272"/>
       <text x="197" y="64" text-anchor="middle" font-family="system-ui" font-size="11" fill="#5a6272">MCP</text>
       <rect x="230" y="45" width="150" height="56" rx="10" fill="#e7f1eb" stroke="#2f6f4f" stroke-width="2"/>
       <text x="305" y="70" text-anchor="middle" font-family="system-ui" font-size="13" fill="#1f2430">the sidecar</text>
@@ -69,8 +70,9 @@
   <div class="aside">
     <p><strong>Shortcut:</strong> the next page installs an integration that
     does this registration for you — and adds a few things plain MCP can't,
-    like automatically surfacing remembered facts in each conversation. If
-    you'd rather not hand-edit config, skip ahead to
+    like automatically surfacing remembered facts in each conversation. Its
+    installer detects an existing <code>mcp_servers</code> entry and won't
+    add a duplicate. If you'd rather not hand-edit config, skip ahead to
     <a href="first-integration.html">step 4</a> and let the integration wire
     it.</p>
   </div>
