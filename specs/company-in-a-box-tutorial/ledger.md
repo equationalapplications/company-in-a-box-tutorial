@@ -16,9 +16,10 @@ file is the authoritative in-flight state (decision-log D11).
 | Cost-escalatory spec review | DONE | D9: T1.5 ladder + T3 Opus + T4 Fable + delta verify, within announced budget |
 | Spec gate | DONE | owner message, 2026-11-05 |
 | Plan gate | DONE | owner message, 2026-11-05 + SDD folder pattern ruling → D11 |
-| Implementation | IN PROGRESS | commit map below |
-| Review ladder (implemented diff) | PENDING | after implementation |
-| Merge | PENDING | Kurt's go |
+| Implementation | DONE | `36f16b2`…(HEAD) — 13 pages, checker, tests, workflows; see commit map |
+| Independent sign-off | DONE | 13/13 pages PASS all gates — non-author reviewer deleg_f609832f (verdict in signoff.md) |
+| Review ladder (implemented diff) | DONE | T1.5 five rungs + Opus delta; all findings folded, tests 24/24 + checker PASS |
+| Merge | AWAITING KURT'S GO | everything green at HEAD |
 
 ## Commit map (implementation)
 
