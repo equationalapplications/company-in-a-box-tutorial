@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Step 3: choose models and privacy — Company in a Box</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-topic="6">
+
+<header class="site-header">
+  <div class="inner">
+    <a class="brand" href="index.html">Company in a Box</a>
+    <nav>
+      <a href="index.html">Overview</a>
+      <a href="setup-hermes.html">Get started</a>
+      <a href="links.html">Links</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <h1>Step 3 · Choose models and privacy</h1>
+  <p class="lead">You can keep every default and go straight to step 4.
+  Nothing here is required. With no setup at all, search still works: plain
+  text search always works, and semantic search uses a small built-in model
+  that runs inside the app.</p>
+
+  <p>Two settings decide how much of the clever stuff turns on: which
+  <span class="term">privacy mode</span> the app runs in, and which models
+  do the two kinds of thinking — search (embeddings) and summary writing
+  (generation).</p>
+
+  <ol class="steps">
+    <li>Check your privacy mode. Open the app's <strong>Settings →
+    Privacy</strong> and see which card is selected. The three cards, in
+    plain words:<br>
+    <strong>Strict (default)</strong> — nothing is sent to a cloud service
+    for generation, and the cloud bridge stays off.<br>
+    <strong>Ephemeral cloud inference</strong> — summary pages may be
+    written by a cloud AI, but nothing is stored there.<br>
+    <strong>Connected agent (Cloud Bridge)</strong> — Ephemeral, plus a
+    read-only cloud connection.<br>
+    One line of scope: the modes govern <em>generation</em> and the
+    <em>cloud connection</em> only. Embeddings (next step) follow their own
+    setting, which by default stays on your machine — and if you point
+    embeddings at a cloud API, the text being embedded goes to it in any
+    mode.</li>
+    <li>Choose how search understands meaning. An
+    <span class="term">embedding</span> turns text into numbers so search
+    can find meaning, not just matching words. Three options:<br>
+    <strong>Do nothing.</strong> The app uses its built-in local model:
+    slower, and it downloads on first use.<br>
+    <strong>Local Ollama, fully offline.</strong> Install
+    <a href="https://ollama.com/download">Ollama</a> — the setup wizard's
+    "Set up local search" screen configures local search, and the sidecar
+    finds Ollama at <code>http://127.0.0.1:11434</code>. Advanced users set
+    <code>embed_profile</code> in the brain's <code>config.json</code>
+    instead (the <a href="https://github.com/equationalapplications/curated-thoughts#bring-your-own-inference-byoi">README's
+    BYOI section</a> shows the schema).<br>
+    <strong>Cloud API.</strong> Set <code>embed_profile</code> in the
+    brain's <code>config.json</code> — same section. There is no Settings
+    screen for embeddings; this is the one setting done in a file.<br>
+    If you change it later, the app re-embeds automatically
+    (<code>ct ingest --yes</code> forces it). Until the embedder is
+    calibrated, the automatic facts from step 6 stay off — step 6
+    explains.</li>
+    <li>Choose who writes summary pages. Open <strong>Settings →
+    Models</strong>, under <strong>AI Generation</strong>. In Strict, pick
+    <strong>Auto-Install</strong>: a small model is downloaded to your
+    machine and generation stays local. To use your own endpoint — local
+    Ollama (<code>http://localhost:11434/v1</code>) or a cloud
+    OpenAI-compatible API — switch to Ephemeral first (Strict keeps the
+    form disabled), then fill in External base URL, API key (optional) and
+    Model name, and Save.</li>
+    <li>If you picked a cloud embedding key, make it reach the sidecar.
+    Hermes launches the sidecar with a few environment variables, plus the
+    <code>env:</code> lines in its config entry (step 5's installer writes
+    them). Put the key in <code>~/.hermes/.env</code> as
+    <code>OPENROUTER_API_KEY=&lt;your key&gt;</code>; the sidecar looks up
+    <code>EMBED_API_KEY</code>, then <code>OPENROUTER_API_KEY</code>, then
+    <code>OPENAI_API_KEY</code>. Plainly: a generation API key entered in
+    Settings stays inside the app and needs none of this.</li>
+  </ol>
+
+  <figure>
+    <svg viewBox="0 0 560 250" role="img" aria-label="Three privacy modes compared: notes stay local everywhere, summary writing may use cloud, the cloud connection differs">
+      <text x="150" y="34" text-anchor="middle" font-family="system-ui" font-size="12" fill="#5a6272">row / mode</text>
+      <rect x="170" y="16" width="120" height="32" rx="8" fill="#e7f1eb" stroke="#2f6f4f" stroke-width="2"/>
+      <text x="230" y="37" text-anchor="middle" font-family="system-ui" font-size="12" fill="#1f2430">Strict</text>
+      <rect x="300" y="16" width="120" height="32" rx="8" fill="#ffffff" stroke="#2f6f4f" stroke-width="2"/>
+      <text x="360" y="37" text-anchor="middle" font-family="system-ui" font-size="12" fill="#1f2430">Ephemeral</text>
+      <rect x="430" y="16" width="120" height="32" rx="8" fill="#ffffff" stroke="#2f6f4f" stroke-width="2"/>
+      <text x="490" y="37" text-anchor="middle" font-family="system-ui" font-size="12" fill="#1f2430">Connected</text>
+      <text x="160" y="88" text-anchor="end" font-family="system-ui" font-size="12" fill="#1f2430">your notes and the brain</text>
+      <rect x="170" y="64" width="120" height="32" rx="8" fill="#e7f1eb" stroke="#2f6f4f" stroke-width="2"/>
+      <text x="230" y="85" text-anchor="middle" font-family="system-ui" font-size="12" fill="#1f2430">local</text>
+      <rect x="300" y="64" width="120" height="32" rx="8" fill="#e7f1eb" stroke="#2f6f4f" stroke-width="2"/>
+      <text x="360" y="85" text-anchor="middle" font-family="system-ui" font-size="12" fill="#1f2430">local</text>
+      <rect x="430" y="64" width="120" height="32" rx="8" fill="#e7f1eb" stroke="#2f6f4f" stroke-width="2"/>
+      <text x="490" y="85" text-anchor="middle" font-family="system-ui" font-size="12" fill="#1f2430">local</text>
+      <text x="160" y="138" text-anchor="end" font-family="system-ui" font-size="12" fill="#1f2430">summary writing</text>
+      <rect x="170" y="114" width="120" height="32" rx="8" fill="#e7f1eb" stroke="#2f6f4f" stroke-width="2"/>
+      <text x="230" y="135" text-anchor="middle" font-family="system-ui" font-size="12" fill="#1f2430">local</text>
+      <rect x="300" y="114" width="120" height="32" rx="8" fill="#ffffff" stroke="#2f6f4f" stroke-width="2"/>
+      <text x="360" y="135" text-anchor="middle" font-family="system-ui" font-size="12" fill="#1f2430">may use cloud</text>
+      <rect x="430" y="114" width="120" height="32" rx="8" fill="#ffffff" stroke="#2f6f4f" stroke-width="2"/>
+      <text x="490" y="135" text-anchor="middle" font-family="system-ui" font-size="12" fill="#1f2430">may use cloud</text>
+      <text x="160" y="188" text-anchor="end" font-family="system-ui" font-size="12" fill="#1f2430">cloud connection</text>
+      <rect x="170" y="164" width="120" height="32" rx="8" fill="#e7f1eb" stroke="#2f6f4f" stroke-width="2"/>
+      <text x="230" y="185" text-anchor="middle" font-family="system-ui" font-size="12" fill="#1f2430">off</text>
+      <rect x="300" y="164" width="120" height="32" rx="8" fill="#e7f1eb" stroke="#2f6f4f" stroke-width="2"/>
+      <text x="360" y="185" text-anchor="middle" font-family="system-ui" font-size="12" fill="#1f2430">off</text>
+      <rect x="430" y="164" width="120" height="32" rx="8" fill="#ffffff" stroke="#2f6f4f" stroke-width="2"/>
+      <text x="490" y="185" text-anchor="middle" font-family="system-ui" font-size="12" fill="#1f2430">read-only</text>
+      <line x1="170" y1="222" x2="550" y2="222" stroke="#5a6272" stroke-width="1.5" stroke-dasharray="6 4"/>
+      <text x="360" y="242" text-anchor="middle" font-family="system-ui" font-size="12" fill="#5a6272">embeddings: your choice, separate from the mode</text>
+    </svg>
+    <figcaption>The three modes in one picture. Whatever you choose, your
+    notes and the brain stay on your machine.</figcaption>
+  </figure>
+
+  <div class="aside">
+    <p><strong>Private by default, your choice when you want more.</strong>
+    Strict privacy mode is on out of the box: your notes and facts never
+    leave your machine, and cloud features stay off. No model setup is
+    required — without an embedding key or Ollama, semantic search falls
+    back to a small built-in local model (slower; downloads on first use)
+    and plain text search always works. Want more? Configure embeddings by
+    running Ollama (the wizard's "Set up local search" screen) or by
+    setting <code>embed_profile</code> in the brain's <code>config.json</code>,
+    and generation in Settings → Models — Auto-Install for local, or an
+    external endpoint after switching to Ephemeral. Nothing leaves your
+    machine until you choose a mode that allows it.</p>
+  </div>
+
+  <p>Next: step 4, <a href="connect-memory.html">connect the memory to your
+  agent</a>.</p>
+
+  <div class="pager">
+    <a href="setup-memory.html">← Step 2: install Curated Thoughts</a>
+    <span class="spacer"></span>
+    <a href="connect-memory.html">Step 4: connect the memory →</a>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="inner">
+    <p>Made with ❤️ by <a href="https://equationalapplications.com">Equational Applications LLC</a>.</p>
+    <p>This tutorial is free and open source under the <a href="https://github.com/equationalapplications/company-in-a-box-tutorial/blob/main/LICENSE">MIT license</a>. Curated Thoughts, Curated Thoughts Integrations, and SynapseTree are also MIT-licensed open source.</p>
+    <p><a href="index.html">Overview</a> · <a href="links.html">All links</a> · <a href="https://github.com/equationalapplications/company-in-a-box-tutorial">Source code</a></p>
+  </div>
+</footer>
+
+</body>
+</html>

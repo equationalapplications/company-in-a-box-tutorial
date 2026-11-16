@@ -34,21 +34,23 @@ SITE = REPO / "site"
 STATE_FILE = Path(__file__).resolve().parent / ".link-state.json"
 
 # Page map: file -> data-topic number. Row 1 (index) is exempt from the
-# step counter; row 13 (links) is exempt from the SVG-presence check.
+# step counter; row 15 (links) is exempt from the SVG-presence check.
 MANIFEST = {
     "index.html": "1",
     "the-pattern.html": "2",
     "the-three-tools.html": "3",
     "setup-hermes.html": "4",
     "setup-memory.html": "5",
-    "connect-memory.html": "6",
-    "first-integration.html": "7",
-    "procedures.html": "8",
-    "delegate.html": "9",
-    "schedule.html": "10",
-    "delivery-flow.html": "11",
-    "team-memory.html": "12",
-    "links.html": "13",
+    "models-privacy.html": "6",
+    "connect-memory.html": "7",
+    "first-integration.html": "8",
+    "check-it-works.html": "9",
+    "procedures.html": "10",
+    "delegate.html": "11",
+    "schedule.html": "12",
+    "delivery-flow.html": "13",
+    "team-memory.html": "14",
+    "links.html": "15",
 }
 SVG_EXEMPT = {"links.html"}
 STEPS_EXEMPT = {"index.html"}
@@ -385,7 +387,7 @@ def main() -> int:
     elif os.environ.get("GITHUB_ACTIONS") == "true":
         fail("gitleaks binary not found in CI — the secret gate is mandatory")
 
-    # Sitemap: hand-maintained, must list EXACTLY the 13 manifest URLs
+    # Sitemap: hand-maintained, must list EXACTLY the 15 manifest URLs
     # (no build step generates it, so the checker is what keeps it true)
     sitemap_path = SITE / "sitemap.xml"
     if sitemap_path.exists():

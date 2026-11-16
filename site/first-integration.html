@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Step 4: install the integration — Company in a Box</title>
+<title>Step 5: install the integration — Company in a Box</title>
 <link rel="stylesheet" href="css/style.css">
 </head>
-<body data-topic="7">
+<body data-topic="8">
 
 <header class="site-header">
   <div class="inner">
@@ -20,10 +20,10 @@
 </header>
 
 <main>
-  <h1>Step 4 · Install the integration</h1>
+  <h1>Step 5 · Install the integration</h1>
   <p class="lead">Curated Thoughts Integrations is a collection of
   ready-made connectors — one per agent harness. This step installs the
-  Hermes one, which upgrades your wiring from step 3 into something smarter.</p>
+  Hermes one, which upgrades your wiring from step 4 into something smarter.</p>
 
   <p>Each integration ships the same layers, adapted to its harness:
   registration (so you don't hand-edit config), a doctor that checks the
@@ -54,15 +54,22 @@
     <code>~/.hermes/plugins/curated-thoughts/</code>. It is safe to run
     again any time and needs no administrator rights:<br>
     <pre><code>bash hermes-0.7.2/scripts/install.sh</code></pre>
-    The installer may print a config block, with a message saying where it
-    goes. Follow that message — and match it to what your file shows:
+    What you should see: near the end, under <code>== Plugin enablement
+    ==</code>, either an <code>OK:</code> line or a block to paste; the
+    run finishes with <code>== Done ==</code>. The installer never
+    overwrites an entry you already have. Without the
+    <code>plugins</code> entry the tools work but the integration's
+    skills and session-start recall stay switched off.</li>
+    <li>Place the printed config blocks. The installer may print a
+    config block, with a message saying where it goes. Follow that
+    message — and match it to what your file shows:
     <ul>
       <li>If it prints an <code>mcp_servers</code> block and says “No
       <code>mcp_servers:</code> section found. Add the following to
       <code>~/.hermes/config.yaml</code>” — paste the whole block at the
       top level of the file, exactly as printed, keeping its indentation.
       You usually see this if you skipped the hand-edit from
-      <a href="connect-memory.html">tutorial step 3</a>.</li>
+      <a href="connect-memory.html">tutorial step 4</a>.</li>
       <li>If it says “An <code>mcp_servers:</code> section exists but has
       no <code>curated-thoughts</code> key. Insert the following block
       INSIDE that section (indent one level)” — don't paste the block
@@ -102,43 +109,7 @@
       <pre><code>plugins:
   enabled:
     - curated-thoughts</code></pre></li>
-    </ul>
-    What you should see: near the end, under <code>== Plugin enablement
-    ==</code>, either an <code>OK:</code> line or a block to paste; the
-    run finishes with <code>== Done ==</code>. The installer never
-    overwrites an entry you already have. Without the
-    <code>plugins</code> entry the tools work but the integration's
-    skills and session-start recall stay switched off.</li>
-    <li>Run the doctor. It checks each layer and tells you exactly what to
-    fix:<br>
-    <pre><code>python3 ~/.hermes/plugins/curated-thoughts/scripts/ct_doctor.py check</code></pre>
-    What you should see: one line per check — the sidecar (the helper
-    program that serves your memory), the brain (its live database), the
-    vault (your files of durable facts), the registration (the config
-    entry that lets Hermes find the sidecar), plus a few more checks
-    (import pre-flight, version compatibility) — most lines saying
-    <code>PASS</code>, then a tally like <code>0 FAIL, 1 WARN, 9 PASS</code>.
-    <code>0 FAIL</code> is the goal. <code>WARN</code> means that layer
-    works but a feature is degraded — the line's <code>fix:</code> hint
-    says exactly what to do. <code>FAIL</code> means stop, do what the
-    line says, and run the doctor again. A common <code>WARN</code> is
-    the embedding-backend hint: on the default local setup you don't
-    have to set up any embedding model — with no embedding API key and
-    no Ollama running, semantic search falls back to the sidecar's
-    built-in local model (slower; downloads on first use), and plain
-    text search of your vault works regardless. And if the installer's
-    <code>mcp_servers</code> section said OK but printed env names under
-    it, make sure your existing entry carries those names — the
-    <code>sidecar-env</code> check reports any that are missing.</li>
-    <li>Restart Hermes and watch memory show up on its own. Quit and
-    reopen Hermes so it loads the plugin. You'll know it worked when
-    remembered facts start showing up in conversations on their own: at
-    session start you get a short recall of relevant procedures and facts,
-    and on each message the integration matches relevant memory to what
-    you just asked. If nothing shows up: re-run the doctor, make sure
-    <code>plugins.enabled</code> lists <code>curated-thoughts</code>, and
-    make sure Curated Thoughts itself is version 3.3.0 or newer — older
-    versions can't deliver live facts.</li>
+    </ul></li>
   </ol>
 
   <figure>
@@ -163,19 +134,10 @@
     exactly when it's relevant — and never repeats itself.</figcaption>
   </figure>
 
-  <div class="aside">
-    <p><strong>Private by default, your choice when you want more.</strong>
-    Strict privacy mode is on out of the box: your notes and facts never
-    leave your machine, and cloud features stay off. No model setup is
-    required — without an embedding key or Ollama, semantic search falls
-    back to a small built-in local model (slower; downloads on first use)
-    and plain text search always works. Want more? Point embeddings and
-    generation at a local Ollama model (fully offline) or a cloud API
-    (<code>Settings → Models</code>), and pick a privacy mode — Strict,
-    Ephemeral (cloud generation, no cloud connection), or Connected
-    (both). Nothing leaves your machine until you choose a mode that
-    allows it.</p>
-  </div>
+  <p>Two things used to live on this page and now have pages of their
+  own: privacy and model choices — <a href="models-privacy.html">step
+  3</a>; checking that the memory works, including the doctor —
+  <a href="check-it-works.html">step 6</a>.</p>
 
   <div class="aside">
     <p><strong>Other harnesses welcome:</strong> the same repo ships
@@ -184,13 +146,13 @@
     the <a href="links.html">link directory</a>.</p>
   </div>
 
-  <p>Next: step 5, <a href="procedures.html">give the company standing
-  rules</a>.</p>
+  <p>Next: step 6, <a href="check-it-works.html">check that memory
+  works</a>.</p>
 
   <div class="pager">
-    <a href="connect-memory.html">← Step 3: connect the memory</a>
+    <a href="connect-memory.html">← Step 4: connect the memory</a>
     <span class="spacer"></span>
-    <a href="procedures.html">Step 5: standing rules →</a>
+    <a href="check-it-works.html">Step 6: check it works →</a>
   </div>
 </main>
 
