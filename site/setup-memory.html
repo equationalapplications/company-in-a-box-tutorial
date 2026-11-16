@@ -33,17 +33,49 @@
   actually works. Both live on your machine.</p>
 
   <ol class="steps">
-    <li>Download the installer for your system (macOS, Linux, or Windows)
-    from the <a href="https://github.com/equationalapplications/curated-thoughts/releases">Curated
-    Thoughts Releases page</a> and install it.</li>
-    <li>Open the app and pick a folder to be your vault.</li>
-    <li>Drop a few documents in — PDFs, Word files, or Markdown notes. The
-    app indexes them and proposes summary pages, which wait for your
-    approval before they become permanent memory.</li>
+    <li>Download and install. Go to the <a href="https://github.com/equationalapplications/curated-thoughts/releases">Curated
+    Thoughts Releases page</a> and grab the installer for your system. For
+    example, release 3.13.0 (a version that will have moved on by the time
+    you read this — always take the newest) ships a Linux
+    <code>.deb</code> package (an AppImage and an <code>.rpm</code> also
+    exist), a macOS <code>.dmg</code>, and a Windows <code>.exe</code>
+    setup — in each case with the version number in the file name, like
+    <code>Curated.Thoughts_3.13.0_amd64.deb</code>. Install it like any
+    other app.</li>
+    <li>Open the app for the first time. The setup wizard starts by asking
+    "Where is your vault?" — click <strong>Browse…</strong>, pick or create
+    a folder (something like <code>Documents/company-vault</code>), and
+    confirm. The next screens set your privacy posture and your models; the
+    defaults are fine to start with, and <a href="models-privacy.html">step
+    3</a> explains every choice. Pick a folder you'll keep — switching to a
+    different vault later discards what the app has learned from this one
+    (it offers a backup first).</li>
+    <li>Check the command-line tools. Installing the app also installs
+    <code>ct</code>, the same tools your agent will use through Hermes.
+    Open a terminal and run:<br>
+    <pre><code>ct status</code></pre>
+    What you should see: a short table — how many documents and chunks are
+    indexed, how many wiki entries and pending proposals exist, a schema
+    version, the path to your brain database, and the time of the last
+    ingest run. Seeing numbers instead of errors means the tools Hermes
+    will call are already working.</li>
+    <li>Drop in documents and keep the app running. Add a few files —
+    PDFs, Word files, or Markdown notes — to the source-documents folder
+    the app sets up inside your vault; it watches that folder and ingests
+    new files automatically. If you'd rather not keep the app open, the
+    command line can do the same jobs headlessly: run <code>ct
+    watch</code> with <code>CURATED_VAULT_ROOT</code> set to your vault
+    folder, or <code>ct ingest --yes</code> once to process what's
+    already there.</li>
+    <li>Approve what it proposes. The app proposes summary pages from your
+    documents — open the <strong>Review</strong> screen (or run
+    <code>ct proposals review</code> in a terminal) and accept the ones
+    that are right. Approved pages become permanent memory your agents can
+    recall; rejected ones don't.</li>
   </ol>
 
   <figure>
-    <svg viewBox="0 0 560 150" role="img" aria-label="Files flow into the vault, the brain indexes them, agents recall facts">
+    <svg viewBox="0 0 560 170" role="img" aria-label="Files flow into the vault, the brain indexes them into ~/.brain, agents recall facts">
       <rect x="30" y="45" width="120" height="56" rx="10" fill="#ffffff" stroke="#2f6f4f" stroke-width="2"/>
       <text x="90" y="70" text-anchor="middle" font-family="system-ui" font-size="13" fill="#1f2430">your files</text>
       <text x="90" y="88" text-anchor="middle" font-family="system-ui" font-size="11" fill="#5a6272">pdf · docx · md</text>
@@ -52,16 +84,25 @@
       <rect x="210" y="45" width="140" height="56" rx="10" fill="#e7f1eb" stroke="#2f6f4f" stroke-width="2"/>
       <text x="280" y="70" text-anchor="middle" font-family="system-ui" font-size="13" fill="#1f2430">the brain</text>
       <text x="280" y="88" text-anchor="middle" font-family="system-ui" font-size="11" fill="#5a6272">indexed · searchable · local</text>
+      <text x="280" y="116" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="10" fill="#5a6272">~/.brain</text>
       <line x1="350" y1="73" x2="405" y2="73" stroke="#5a6272" stroke-width="2"/>
       <polygon points="405,73 395,68 395,78" fill="#5a6272"/>
       <rect x="410" y="45" width="120" height="56" rx="10" fill="#ffffff" stroke="#2f6f4f" stroke-width="2"/>
       <text x="470" y="70" text-anchor="middle" font-family="system-ui" font-size="13" fill="#1f2430">recall</text>
       <text x="470" y="88" text-anchor="middle" font-family="system-ui" font-size="11" fill="#5a6272">agents ask, it answers</text>
-      <text x="280" y="130" text-anchor="middle" font-family="system-ui" font-size="12" fill="#5a6272">one brain per vault — nothing leaves your machine</text>
+      <text x="280" y="140" text-anchor="middle" font-family="system-ui" font-size="12" fill="#5a6272">one brain per vault — nothing leaves your machine</text>
     </svg>
     <figcaption>Documents go in, the brain crystallizes them, agents recall
     from it.</figcaption>
   </figure>
+
+  <p>Where the brain lives: by default, in a <code>~/.brain</code> folder in
+  your home directory — <code>brain.db</code> is the database,
+  <code>config.json</code> its settings. You don't need to touch it, but
+  don't delete it either: it <em>is</em> the memory. Setting
+  <code>CURATED_BRAIN_DIR</code> moves it elsewhere; step 5's installer
+  prints the right config line automatically when it's not at the default
+  spot.</p>
 
   <div class="aside">
     <p><strong>Why a human approves:</strong> facts proposed from your
@@ -70,13 +111,13 @@
     memory stays trustworthy years later.</p>
   </div>
 
-  <p>Next: step 3, <a href="connect-memory.html">wire the memory into your
-  agent</a>.</p>
+  <p>Next: step 3, <a href="models-privacy.html">choose models and
+  privacy</a>.</p>
 
   <div class="pager">
     <a href="setup-hermes.html">← Step 1: install Hermes</a>
     <span class="spacer"></span>
-    <a href="connect-memory.html">Step 3: connect the memory →</a>
+    <a href="models-privacy.html">Step 3: models and privacy →</a>
   </div>
 </main>
 

@@ -11,7 +11,7 @@ Read it at: **https://equationalapplications.github.io/company-in-a-box-tutorial
 
 ## Structure
 
-- `site/` — the tutorial (13 single-topic pages, plain HTML/CSS/SVG, no
+- `site/` — the tutorial (15 single-topic pages, plain HTML/CSS/SVG, no
   build step, no JS required)
 - `specs/company-in-a-box-tutorial/` — this delivery's `spec.md`, `plan.md`,
   `ledger.md` (status), and `signoff.md` (accuracy sign-off table)

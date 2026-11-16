@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Step 6: check that memory works — Company in a Box</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-topic="9">
+
+<header class="site-header">
+  <div class="inner">
+    <a class="brand" href="index.html">Company in a Box</a>
+    <nav>
+      <a href="index.html">Overview</a>
+      <a href="setup-hermes.html">Get started</a>
+      <a href="links.html">Links</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <h1>Step 6 · Check that memory works</h1>
+  <p class="lead">The integration is installed — but installed isn't
+  working. This page checks each layer, in a few minutes, and tells you
+  exactly what to fix if something's off.</p>
+
+  <ol class="steps">
+    <li>Run the doctor. The integration ships a <span class="term">doctor</span>
+    — a script that checks each layer of the setup and explains anything
+    broken:<br>
+    <pre><code>python3 ~/.hermes/plugins/curated-thoughts/scripts/ct_doctor.py check</code></pre>
+    What you should see: one line per check — the sidecar (the helper
+    program that serves your memory), the brain (its live database), the
+    vault (your files of durable facts), the registration (the config
+    entry that lets Hermes find the sidecar), plus a few more checks
+    (import pre-flight, version compatibility) — most lines saying
+    <code>PASS</code>, then a tally like <code>0 FAIL, 1 WARN, 9 PASS</code>.
+    <code>0 FAIL</code> is the goal. <code>WARN</code> means that layer
+    works but a feature is degraded — the line's <code>fix:</code> hint
+    says exactly what to do. <code>FAIL</code> means stop, do what the
+    line says, and run the doctor again. The aside below decodes WARN
+    lines and exit codes.</li>
+    <li>Restart Hermes and look for the session-start recall. Quit and
+    reopen Hermes, then start a fresh session: you should get a short
+    recall of relevant procedures and facts. On each message, the
+    integration's <span class="term">Intuitive Wisdom</span> may add a
+    remembered fact on its own — when a message touches something your
+    memory knows. Corrections you approve always flow. If nothing shows
+    up at all: re-run the doctor, make sure <code>plugins.enabled</code>
+    lists <code>curated-thoughts</code>, and make sure Curated Thoughts
+    itself is version 3.3.0 or newer — older versions can't deliver live
+    facts.</li>
+    <li>Ask something only your vault knows. Pick a fact you know is in
+    the files you added in step 2 and ask your agent: "search my vault
+    for what I said about X". If it comes back with your fact, the whole
+    pipe — vault to brain to sidecar to agent — works, apart from
+    automatic delivery.</li>
+    <li>Know what's happening under the hood, and turn on verbose mode to
+    see it. When a message touches something your memory knows, the fact
+    arrives on its own — without you asking. Verbose mode shows every
+    decision: run Hermes with <code>CT_WISDOM_VERBOSE=1</code> set, then
+    read the log:<br>
+    <pre><code>python3 ~/.hermes/plugins/curated-thoughts/scripts/ct_wisdom_log.py --host hermes -n 5</code></pre>
+    The log lives at <code>~/.hermes/logs/ct-wisdom-verbose.jsonl</code>.
+    The reasons, in plain words: <code>no_match</code> (nothing in memory
+    matched the message), <code>deduped</code> (a match was found but had
+    already been shown), <code>gate_uncalibrated</code> (your embedder
+    isn't covered by your Curated Thoughts version's calibration yet —
+    updating extends coverage).</li>
+  </ol>
+
+  <div class="aside">
+    <p><strong>Reading the WARN lines and exit codes:</strong> a common
+    <code>WARN</code> is the embedding-backend hint — on the default
+    local setup you don't have to set up any embedding model; with no
+    embedding API key and no Ollama running, semantic search falls back
+    to the sidecar's built-in local model (slower; downloads on first
+    use), and plain text search of your vault works regardless. If the
+    installer's <code>mcp_servers</code> section said OK but printed env
+    names under it, make sure your existing entry carries those names —
+    the <code>sidecar-env</code> check reports any that are missing. The
+    doctor exits with 0 when everything passes, 1 when something failed,
+    and 2 when it couldn't run at all.</p>
+  </div>
+
+  <figure>
+    <svg viewBox="0 0 560 210" role="img" aria-label="Plugin lifecycle: session start recalls context, each message pulls matching facts">
+      <circle cx="100" cy="100" r="46" fill="#ffffff" stroke="#2f6f4f" stroke-width="2"/>
+      <text x="100" y="94" text-anchor="middle" font-family="system-ui" font-size="12" fill="#1f2430">session</text>
+      <text x="100" y="112" text-anchor="middle" font-family="system-ui" font-size="12" fill="#1f2430">starts</text>
+      <circle cx="280" cy="100" r="46" fill="#ffffff" stroke="#2f6f4f" stroke-width="2"/>
+      <text x="280" y="94" text-anchor="middle" font-family="system-ui" font-size="12" fill="#1f2430">you send a</text>
+      <text x="280" y="112" text-anchor="middle" font-family="system-ui" font-size="12" fill="#1f2430">message</text>
+      <circle cx="460" cy="100" r="46" fill="#e7f1eb" stroke="#2f6f4f" stroke-width="2"/>
+      <text x="460" y="94" text-anchor="middle" font-family="system-ui" font-size="12" fill="#1f2430">relevant facts</text>
+      <text x="460" y="112" text-anchor="middle" font-family="system-ui" font-size="12" fill="#1f2430">appear in context</text>
+      <line x1="146" y1="100" x2="230" y2="100" stroke="#5a6272" stroke-width="2"/>
+      <polygon points="230,100 220,95 220,105" fill="#5a6272"/>
+      <line x1="326" y1="100" x2="410" y2="100" stroke="#5a6272" stroke-width="2"/>
+      <polygon points="410,100 400,95 400,105" fill="#5a6272"/>
+      <text x="368" y="82" text-anchor="middle" font-family="system-ui" font-size="10" fill="#5a6272">if it finds a</text>
+      <text x="368" y="94" text-anchor="middle" font-family="system-ui" font-size="10" fill="#5a6272">confident match</text>
+      <path d="M 460 50 C 460 10, 100 10, 100 50" fill="none" stroke="#5a6272" stroke-width="2" stroke-dasharray="5 4"/>
+      <text x="280" y="185" text-anchor="middle" font-family="system-ui" font-size="12" fill="#5a6272">facts never touch the system prompt, so nothing gets repeated</text>
+    </svg>
+    <figcaption>Intuitive Wisdom, per conversation. The memory speaks up
+    when it finds a confident match — and never repeats itself.</figcaption>
+  </figure>
+
+  <p>Next: step 7, <a href="procedures.html">give the company standing
+  rules</a>.</p>
+
+  <div class="pager">
+    <a href="first-integration.html">← Step 5: install the integration</a>
+    <span class="spacer"></span>
+    <a href="procedures.html">Step 7: standing rules →</a>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="inner">
+    <p>Made with ❤️ by <a href="https://equationalapplications.com">Equational Applications LLC</a>.</p>
+    <p>This tutorial is free and open source under the <a href="https://github.com/equationalapplications/company-in-a-box-tutorial/blob/main/LICENSE">MIT license</a>. Curated Thoughts, Curated Thoughts Integrations, and SynapseTree are also MIT-licensed open source.</p>
+    <p><a href="index.html">Overview</a> · <a href="links.html">All links</a> · <a href="https://github.com/equationalapplications/company-in-a-box-tutorial">Source code</a></p>
+  </div>
+</footer>
+
+</body>
+</html>

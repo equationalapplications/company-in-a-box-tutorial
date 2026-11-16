@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Step 4: install the integration — Company in a Box</title>
+<title>Step 5: install the integration — Company in a Box</title>
 <link rel="stylesheet" href="css/style.css">
 </head>
-<body data-topic="7">
+<body data-topic="8">
 
 <header class="site-header">
   <div class="inner">
@@ -20,10 +20,10 @@
 </header>
 
 <main>
-  <h1>Step 4 · Install the integration</h1>
+  <h1>Step 5 · Install the integration</h1>
   <p class="lead">Curated Thoughts Integrations is a collection of
   ready-made connectors — one per agent harness. This step installs the
-  Hermes one, which upgrades your wiring from step 3 into something smarter.</p>
+  Hermes one, which upgrades your wiring from step 4 into something smarter.</p>
 
   <p>Each integration ships the same layers, adapted to its harness:
   registration (so you don't hand-edit config), a doctor that checks the
@@ -33,40 +33,125 @@
   without the agent having to remember to ask.</p>
 
   <ol class="steps">
-    <li>Get the Hermes integration: go to the
+    <li>Download and unpack the release. A release is a packaged snapshot
+    of the plugin, ready to download. Go to the
     <a href="https://github.com/equationalapplications/curated-thoughts-integrations/releases?q=hermes">releases
-    page for the Hermes integration</a> and grab the latest
-    <code>hermes-v…</code> release.</li>
-    <li>Install it and run its doctor script — it checks the sidecar, the
-    brain, the vault, and the registration, and tells you exactly what to fix
-    if anything is off.</li>
-    <li>Restart Hermes. You'll know it worked when remembered facts start
-    showing up in conversations on their own: at session start you get a
-    short recall of relevant procedures and facts, and on each message the
-    integration matches relevant memory to what you just asked.</li>
+    page for the Hermes integration</a> and pick the newest release whose
+    tag starts with <code>hermes-v</code> — download its
+    <code>hermes-&lt;version&gt;.tar.gz</code> asset. The version number
+    will be higher than the examples here by the time you read this; that
+    is fine, the newest <code>hermes-v…</code> release is always the right
+    pick. Don't grab the <code>deepseek-v…</code> or <code>opencode-v…</code>
+    releases sitting next to it — those are for other harnesses. A
+    <code>.tar.gz</code> file (a tarball) is a zipped folder; unpack it in
+    a terminal:<br>
+    <pre><code>tar xzf hermes-0.7.2.tar.gz</code></pre>
+    (<code>0.7.2</code> is an example — use the name of the file you
+    downloaded.) You now have a <code>hermes-0.7.2/</code> folder; your
+    version number replaces <code>0.7.2</code> in every command below.</li>
+    <li>Run the installer. A plugin is an add-on that Hermes loads; the
+    installer copies everything into place under
+    <code>~/.hermes/plugins/curated-thoughts/</code>. It is safe to run
+    again any time and needs no administrator rights:<br>
+    <pre><code>bash hermes-0.7.2/scripts/install.sh</code></pre>
+    What you should see: near the end, under <code>== Plugin enablement
+    ==</code>, either an <code>OK:</code> line or a block to paste; the
+    run finishes with <code>== Done ==</code>. The installer never
+    overwrites an entry you already have. Without the
+    <code>plugins</code> entry the tools work but the integration's
+    skills and session-start recall stay switched off (the next step on
+    this page shows where that block goes).</li>
+    <li>Place the printed config blocks. The installer may print a
+    config block, with a message saying where it goes. Follow that
+    message — and match it to what your file shows:
+    <ul>
+      <li>If it prints an <code>mcp_servers</code> block and says “No
+      <code>mcp_servers:</code> section found. Add the following to
+      <code>~/.hermes/config.yaml</code>” — paste the whole block at the
+      top level of the file, exactly as printed, keeping its indentation.
+      You usually see this if you skipped the hand-edit from
+      <a href="connect-memory.html">tutorial step 4</a>.</li>
+      <li>If it says “An <code>mcp_servers:</code> section exists but has
+      no <code>curated-thoughts</code> key. Insert the following block
+      INSIDE that section (indent one level)” — don't paste the block
+      whole: the printed copy still carries its own
+      <code>mcp_servers:</code> header line, and nesting that inside your
+      existing section breaks the config. Copy every printed line
+      <em>except</em> that header, shifted left so
+      <code>curated-thoughts:</code> sits one indent level under your
+      existing <code>mcp_servers:</code> (the <code>command:</code> line
+      may differ if you have set <code>HERMES_CT_SIDECAR</code>). Without
+      any live <code>env:</code> lines, the result looks like:<br>
+      <pre><code>mcp_servers:
+  curated-thoughts:
+    command: curated-thoughts-mcp
+    args: ["--mcp"]</code></pre>
+      If the printed block includes live <code>env:</code> lines — the
+      installer prints them when it detects a setting the sidecar needs
+      forwarded, like a brain outside its default location or an external
+      embedder — keep all of them; the snippet above leaves them out.
+      Lines starting with <code>#</code> are just a fallback hint: keep
+      or delete them — if you use an external embedder, uncomment the
+      <code>OPENROUTER_API_KEY</code> pair (renaming both occurrences on
+      that line to <code>OPENAI_API_KEY</code> or
+      <code>EMBED_API_KEY</code> if that is the one you use, and only if
+      that variable is set), but only when the block has no live
+      <code>env:</code> lines — otherwise you would end up with a second
+      <code>env:</code> key. And keep whatever entries are already in
+      your section.</li>
+      <li>If it prints a <code>plugins</code> block — that is what
+      switches the integration on — and says “No <code>plugins:</code>
+      section found”, paste the whole block at the top level. If it says a
+      <code>plugins:</code> section “exists but does not list
+      <code>curated-thoughts</code>”, add just the one line under
+      <code>enabled:</code> inside that section (create
+      <code>enabled:</code> if it isn't there), keeping whatever else is
+      already listed:<br>
+      <pre><code>plugins:
+  enabled:
+    - curated-thoughts</code></pre></li>
+    </ul></li>
   </ol>
 
   <figure>
-    <svg viewBox="0 0 560 210" role="img" aria-label="Plugin lifecycle: session start recalls context, each message pulls matching facts">
-      <circle cx="100" cy="100" r="46" fill="#ffffff" stroke="#2f6f4f" stroke-width="2"/>
-      <text x="100" y="94" text-anchor="middle" font-family="system-ui" font-size="12" fill="#1f2430">session</text>
-      <text x="100" y="112" text-anchor="middle" font-family="system-ui" font-size="12" fill="#1f2430">starts</text>
-      <circle cx="280" cy="100" r="46" fill="#ffffff" stroke="#2f6f4f" stroke-width="2"/>
-      <text x="280" y="94" text-anchor="middle" font-family="system-ui" font-size="12" fill="#1f2430">you send a</text>
-      <text x="280" y="112" text-anchor="middle" font-family="system-ui" font-size="12" fill="#1f2430">message</text>
-      <circle cx="460" cy="100" r="46" fill="#e7f1eb" stroke="#2f6f4f" stroke-width="2"/>
-      <text x="460" y="94" text-anchor="middle" font-family="system-ui" font-size="12" fill="#1f2430">relevant facts</text>
-      <text x="460" y="112" text-anchor="middle" font-family="system-ui" font-size="12" fill="#1f2430">appear in context</text>
-      <line x1="146" y1="100" x2="230" y2="100" stroke="#5a6272" stroke-width="2"/>
-      <polygon points="230,100 220,95 220,105" fill="#5a6272"/>
-      <line x1="326" y1="100" x2="410" y2="100" stroke="#5a6272" stroke-width="2"/>
-      <polygon points="410,100 400,95 400,105" fill="#5a6272"/>
-      <path d="M 460 50 C 460 10, 100 10, 100 50" fill="none" stroke="#5a6272" stroke-width="2" stroke-dasharray="5 4"/>
-      <text x="280" y="185" text-anchor="middle" font-family="system-ui" font-size="12" fill="#5a6272">facts never touch the system prompt, so nothing gets repeated</text>
+    <svg viewBox="0 0 560 280" role="img" aria-label="The installer puts the plugin in the plugins folder and prints config blocks that go inside config.yaml's two sections">
+      <rect x="40" y="20" width="140" height="40" rx="8" fill="#ffffff" stroke="#1f2430"/>
+      <text x="110" y="36" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#1f2430">hermes-0.7.2.tar.gz</text>
+      <text x="110" y="52" text-anchor="middle" font-family="system-ui" font-size="11" fill="#5a6272">unpack it</text>
+      <line x1="180" y1="40" x2="215" y2="40" stroke="#5a6272" stroke-width="2"/>
+      <polygon points="220,40 210,35 210,45" fill="#5a6272"/>
+      <rect x="225" y="20" width="130" height="40" rx="8" fill="#ffffff" stroke="#1f2430"/>
+      <text x="290" y="44" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#1f2430">scripts/install.sh</text>
+      <line x1="355" y1="40" x2="390" y2="40" stroke="#5a6272" stroke-width="2"/>
+      <polygon points="395,40 385,35 385,45" fill="#5a6272"/>
+      <rect x="400" y="20" width="140" height="40" rx="8" fill="#e7f1eb" stroke="#2f6f4f" stroke-width="2"/>
+      <text x="470" y="36" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#1f2430">~/.hermes/plugins/</text>
+      <text x="470" y="52" text-anchor="middle" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#1f2430">curated-thoughts/</text>
+      <line x1="470" y1="60" x2="470" y2="85" stroke="#5a6272" stroke-width="2" stroke-dasharray="5 4"/>
+      <polygon points="470,90 465,80 475,80" fill="#5a6272"/>
+      <text x="470" y="78" text-anchor="middle" font-family="system-ui" font-size="10" fill="#5a6272">the blocks land here</text>
+      <rect x="60" y="95" width="440" height="150" rx="10" fill="#ffffff" stroke="#1f2430" stroke-width="2"/>
+      <text x="80" y="117" font-family="ui-monospace, Menlo, monospace" font-size="13" fill="#1f2430">config.yaml</text>
+      <text x="85" y="145" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="#1f2430">mcp_servers:</text>
+      <rect x="95" y="153" width="180" height="60" rx="8" fill="#e7f1eb" stroke="#2f6f4f" stroke-width="2"/>
+      <text x="110" y="173" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#1f2430">curated-thoughts:</text>
+      <text x="110" y="190" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#5a6272">command: curated-thoughts-mcp</text>
+      <text x="110" y="205" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#5a6272">args: ["--mcp"]</text>
+      <text x="315" y="145" font-family="ui-monospace, Menlo, monospace" font-size="12" fill="#1f2430">plugins:</text>
+      <rect x="325" y="153" width="160" height="60" rx="8" fill="#e7f1eb" stroke="#2f6f4f" stroke-width="2"/>
+      <text x="340" y="173" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#1f2430">enabled:</text>
+      <text x="340" y="190" font-family="ui-monospace, Menlo, monospace" font-size="11" fill="#1f2430">- curated-thoughts</text>
+      <text x="280" y="258" text-anchor="middle" font-family="system-ui" font-size="12" fill="#5a6272">the plugin lands in the plugins folder;</text>
+      <text x="280" y="274" text-anchor="middle" font-family="system-ui" font-size="12" fill="#5a6272">the printed blocks go inside config.yaml's two sections</text>
     </svg>
-    <figcaption>Intuitive Wisdom, per conversation. The memory speaks up
-    exactly when it's relevant — and never repeats itself.</figcaption>
+    <figcaption>Where things land: unpack the tarball, run the installer —
+    it copies the plugin into place and prints the config blocks for you to
+    place in the next step.</figcaption>
   </figure>
+
+  <p>Privacy and model choices are in <a href="models-privacy.html">step
+  3</a>; checking that memory works is <a href="check-it-works.html">step
+  6</a>.</p>
 
   <div class="aside">
     <p><strong>Other harnesses welcome:</strong> the same repo ships
@@ -75,13 +160,13 @@
     the <a href="links.html">link directory</a>.</p>
   </div>
 
-  <p>Next: step 5, <a href="procedures.html">give the company standing
-  rules</a>.</p>
+  <p>Next: step 6, <a href="check-it-works.html">check that memory
+  works</a>.</p>
 
   <div class="pager">
-    <a href="connect-memory.html">← Step 3: connect the memory</a>
+    <a href="connect-memory.html">← Step 4: connect the memory</a>
     <span class="spacer"></span>
-    <a href="procedures.html">Step 5: standing rules →</a>
+    <a href="check-it-works.html">Step 6: check it works →</a>
   </div>
 </main>
 
