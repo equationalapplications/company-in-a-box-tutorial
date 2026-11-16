@@ -71,16 +71,20 @@
       existing section breaks the config. Copy every printed line
       <em>except</em> that header, shifted left so
       <code>curated-thoughts:</code> sits one indent level under your
-      existing <code>mcp_servers:</code>. Without any extra environment
-      lines, the result looks like:<br>
+      existing <code>mcp_servers:</code> (the <code>command:</code> line
+      may differ if you have set <code>HERMES_CT_SIDECAR</code>). Without
+      any live <code>env:</code> lines, the result looks like:<br>
       <pre><code>mcp_servers:
   curated-thoughts:
     command: curated-thoughts-mcp
     args: ["--mcp"]</code></pre>
-      If the printed block includes <code>env:</code> lines — they appear
-      when your brain lives outside its default location or you use an
-      external embedder — keep those too; the snippet above leaves them
-      out. And keep whatever entries are already in your section.</li>
+      If the printed block includes live <code>env:</code> lines — they
+      appear when your brain lives outside its default location — keep
+      those; the snippet above leaves them out. Lines starting with
+      <code>#</code> are just comments: keep or delete them, and
+      uncomment the <code>OPENROUTER_API_KEY</code> pair only if you use
+      an external embedder and that variable is set. And keep whatever
+      entries are already in your section.</li>
       <li>If it prints a <code>plugins</code> block — that is what
       switches the integration on — and says “No <code>plugins:</code>
       section found”, paste the whole block at the top level. If it says a
@@ -93,12 +97,14 @@
   enabled:
     - curated-thoughts</code></pre></li>
     </ul>
-    What you should see: the installer ends with
-    <code>== Plugin enablement ==</code> followed by either an
-    <code>OK:</code> line — nothing to do — or a block to paste. It never
-    overwrites an entry you already have. Without the <code>plugins</code>
-    entry the tools work but the integration's skills and session-start
-    recall stay switched off.</li>
+    What you should see: near the end, under <code>== Plugin enablement
+    ==</code>, either an <code>OK:</code> line or a block to paste; the
+    run finishes with <code>== Done ==</code>. If the
+    <code>mcp_servers</code> section said OK but printed env names under
+    it, the doctor's <code>sidecar-env</code> check will confirm nothing
+    is missing. The installer never overwrites an entry you already
+    have. Without the <code>plugins</code> entry the tools work but the
+    integration's skills and session-start recall stay switched off.</li>
     <li>Run the doctor. It checks each layer and tells you exactly what to
     fix:<br>
     <pre><code>python3 ~/.hermes/plugins/curated-thoughts/scripts/ct_doctor.py check</code></pre>

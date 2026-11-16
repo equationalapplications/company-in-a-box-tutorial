@@ -1,7 +1,7 @@
 # Spec — first-integration page: teach each install step in detail
 
-Status: In Tier-3 review (2026-11-16) — round-3 delta findings folded in
-this commit, round-4 delta pending.
+Status: In Tier-3 review (2026-11-16) — round-4 delta findings folded in
+this commit, round-5 delta pending.
 
 Verification record (2026-11-16): implemented and independently reviewed
 (non-author reviewer PASS, deleg_268748ad); unit tests 24/24 OK
@@ -11,7 +11,15 @@ checked in a real browser at desktop width (screenshots inspected);
 gitleaks clean. Gates on `cdb6a3c` (round-2 fold): tests OK, checker PASS
 offline + external, re-run after the commit. Gates on this fold: re-run
 before the round-4 delta. Round map: r1 findings → `5e2cf5e`; r2 delta →
-`cdb6a3c`; r3 delta → this commit.
+`cdb6a3c`; r3 delta → `12c2e3c`; r4 delta → this commit.
+
+Known trade-offs (adjudicated, not defects): step-2 density (r3-m1
+partial, r4-m6 rejected-with-cite — the reviewer marked it "not
+required"; the mirrored nested bullets survived two review rounds and a
+5th top-level step would trade INTENT's small-bites ruling against its
+few-steps rule). r3-m3 note: the page flags `env:` differences but not
+the `HERMES_CT_SIDECAR` command difference — r4-m3 fixed by adding
+"(command: line may differ)" to the page.
 Date: 2026-11-15
 Owner: Tessera
 
@@ -93,8 +101,9 @@ release tarball and a real doctor run on 2026-11-15):
      2026-11-16): an `mcp_servers` block ("No 'mcp_servers:' section
      found" → paste the whole block at the top level, exactly as printed
      — usually the case for readers who skipped step 3's hand-edit;
-     section exists without the `curated-thoughts` key → add only the
-     `curated-thoughts` entry one indent level under the existing
+     section exists without the `curated-thoughts` key → copy every
+     printed line except the repeated `mcp_servers:` header, shifted so
+     `curated-thoughts:` sits one indent level under the existing
      `mcp_servers:` line) and a `plugins` block ("No 'plugins:' section
      found" → whole block at the top level; section exists without the
      entry → add `- curated-thoughts` under `enabled:`, creating
