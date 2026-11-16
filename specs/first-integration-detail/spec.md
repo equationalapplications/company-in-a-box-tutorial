@@ -1,6 +1,6 @@
 # Spec — first-integration page: teach each install step in detail
 
-Status: Draft (awaiting Kurt's approval)
+Status: Reviewed (Kurt approved via Gemini review, 2026-11-16)
 Date: 2026-11-15
 Owner: Tessera
 
@@ -75,11 +75,20 @@ release tarball and a real doctor run on 2026-11-15):
    - `bash hermes-0.7.2/scripts/install.sh` — copies the plugin into
      `~/.hermes/plugins/curated-thoughts/`, safe to run again any time, no
      administrator rights needed.
-   - If the installer prints a config block, add it to
-     `~/.hermes/config.yaml` exactly as printed (readers who skipped step 3
-     will get the `mcp_servers` block here; everyone gets the
-     `plugins.enabled` entry that switches the plugin on). It never
-     overwrites an existing entry.
+   - If the installer prints a config block, do exactly what its own
+     message says about placement — `install.sh` prints two different
+     cases (verified in the script, 2026-11-16): no `mcp_servers:` section
+     yet → "Add the following to ~/.hermes/config.yaml", and the block
+     goes in at the top level of the file, exactly as printed; an
+     `mcp_servers:` section that lacks the `curated-thoughts` key →
+     "Insert the following block INSIDE that section (indent one level)",
+     so the block must be nested under the existing `mcp_servers:` line,
+     not pasted at the bottom of the file (a top-level paste there would
+     corrupt the YAML). Readers who skipped step 3 get the first case.
+     Everyone gets the `plugins.enabled` entry that switches the plugin
+     on. It never overwrites an existing entry. The page must teach both
+     cases in plain words — YAML placement mistakes are the classic
+     beginner trap here (Gemini review note, 2026-11-16).
    - `python3 ~/.hermes/plugins/curated-thoughts/scripts/ct_doctor.py check`.
    - Plain-language definitions at first use: plugin (an add-on Hermes
      loads), sidecar, brain, vault, registration — the four things the
