@@ -3,10 +3,11 @@
 > Superseded in scope by `specs/configure-ct-hermes/spec.md` (expansion):
 > this delivery's page is now one page of the 15-page restructure.
 
-Status: In Tier-3 review (2026-11-16) — rounds 5, 6, and 7 all returned
-PASS WITH MINORS (0 blockers, 0 majors); round-7 minors folded in this
-commit. Expansion planning (per Kurt's 2026-11-16 directive) runs in
-parallel; a fresh review cycle covers the expansion when it lands.
+Status: MERGED 2026-11-16 (PR #3, merge commit e2b2022; page live, URL
+verified 200). Previously: In Tier-3 review (2026-11-16) — rounds 5, 6,
+and 7 all returned PASS WITH MINORS (0 blockers, 0 majors); round-7
+minors folded in this commit. Expansion planning (per Kurt's 2026-11-16
+directive) ran in parallel and is merged with it.
 
 Verification record (2026-11-16): implemented and independently reviewed
 (non-author reviewer PASS, deleg_268748ad); unit tests 24/24 OK
