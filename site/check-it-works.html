@@ -39,34 +39,24 @@
     <code>0 FAIL</code> is the goal. <code>WARN</code> means that layer
     works but a feature is degraded — the line's <code>fix:</code> hint
     says exactly what to do. <code>FAIL</code> means stop, do what the
-    line says, and run the doctor again. A common <code>WARN</code> is
-    the embedding-backend hint: on the default local setup you don't
-    have to set up any embedding model — with no embedding API key and
-    no Ollama running, semantic search falls back to the sidecar's
-    built-in local model (slower; downloads on first use), and plain
-    text search of your vault works regardless. And if the installer's
-    <code>mcp_servers</code> section said OK but printed env names under
-    it, make sure your existing entry carries those names — the
-    <code>sidecar-env</code> check reports any that are missing. The
-    doctor exits with 0 when everything passes, 1 when something failed,
-    and 2 when it couldn't run at all.</li>
+    line says, and run the doctor again.</li>
     <li>Restart Hermes and look for the session-start recall. Quit and
-    reopen Hermes so it loads the plugin. At session start you get a
-    short recall of relevant procedures and facts, and on each message
-    the integration's <span class="term">Intuitive Wisdom</span> —
-    remembered facts that arrive in the agent's context when they're
-    relevant — matches memory to what you just asked, when the matching
-    is working: it needs a calibrated embedder (step 3) and rarely fires
-    on real messages yet. Corrections you approve always flow. If nothing
-    shows up: re-run the doctor, make sure
-    <code>plugins.enabled</code> lists <code>curated-thoughts</code>, and
-    make sure Curated Thoughts itself is version 3.3.0 or newer — older
-    versions can't deliver live facts.</li>
-    <li>Ask something only your vault knows. Pick a document you approved
-    back in step 2 and ask your agent: "search my vault for what I said
-    about X". If it comes back with your fact, the whole pipe — vault to
-    brain to sidecar to agent — works, apart from automatic
-    delivery.</li>
+    reopen Hermes, then start a fresh session: you should get a short
+    recall of relevant procedures and facts. On each message, the
+    integration's <span class="term">Intuitive Wisdom</span> may add a
+    remembered fact — when it finds a confident match. That is rare on
+    real messages so far, and until the embedder is calibrated (step 3
+    explains calibration) it stays quiet entirely. Corrections you
+    approve always flow. If nothing shows up at all: re-run the doctor,
+    make sure <code>plugins.enabled</code> lists
+    <code>curated-thoughts</code>, and make sure Curated Thoughts itself
+    is version 3.3.0 or newer — older versions can't deliver live
+    facts.</li>
+    <li>Ask something only your vault knows. Pick a fact you know is in
+    the files you added in step 2 and ask your agent: "search my vault
+    for what I said about X". If it comes back with your fact, the whole
+    pipe — vault to brain to sidecar to agent — works, apart from
+    automatic delivery.</li>
     <li>Know what to expect, and turn on verbose mode to see why. Facts
     arriving on their own is the newest part of the integration: until
     the embedder is calibrated it sends no facts at all, and even
@@ -96,12 +86,28 @@
       <polygon points="230,100 220,95 220,105" fill="#5a6272"/>
       <line x1="326" y1="100" x2="410" y2="100" stroke="#5a6272" stroke-width="2"/>
       <polygon points="410,100 400,95 400,105" fill="#5a6272"/>
+      <text x="368" y="84" text-anchor="middle" font-family="system-ui" font-size="10" fill="#5a6272">if it finds a</text>
+      <text x="368" y="96" text-anchor="middle" font-family="system-ui" font-size="10" fill="#5a6272">confident match</text>
       <path d="M 460 50 C 460 10, 100 10, 100 50" fill="none" stroke="#5a6272" stroke-width="2" stroke-dasharray="5 4"/>
       <text x="280" y="185" text-anchor="middle" font-family="system-ui" font-size="12" fill="#5a6272">facts never touch the system prompt, so nothing gets repeated</text>
     </svg>
     <figcaption>Intuitive Wisdom, per conversation. The memory speaks up
     when it finds a confident match — and never repeats itself.</figcaption>
   </figure>
+
+  <div class="aside">
+    <p><strong>Reading the WARN lines and exit codes:</strong> a common
+    <code>WARN</code> is the embedding-backend hint — on the default
+    local setup you don't have to set up any embedding model; with no
+    embedding API key and no Ollama running, semantic search falls back
+    to the sidecar's built-in local model (slower; downloads on first
+    use), and plain text search of your vault works regardless. If the
+    installer's <code>mcp_servers</code> section said OK but printed env
+    names under it, make sure your existing entry carries those names —
+    the <code>sidecar-env</code> check reports any that are missing. The
+    doctor exits with 0 when everything passes, 1 when something failed,
+    and 2 when it couldn't run at all.</p>
+  </div>
 
   <p>Next: step 7, <a href="procedures.html">give the company standing
   rules</a>.</p>

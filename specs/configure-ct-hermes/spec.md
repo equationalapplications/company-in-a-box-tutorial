@@ -1,7 +1,8 @@
 # Spec — configure-ct-hermes: expanding the tutorial to 15 pages
 
-Status: Planned (owner-approved final plan, memo-run2 2026-11-16; write-time
-checks already resolved — see "Write-time check resolutions" below).
+Status: Implemented, in review (implemented 2026-11-16 in `4266abe`…`72c6510`
+per memo-run2; write-time checks resolved — see "Write-time check
+resolutions" below; sign-off pending review convergence).
 
 Date: 2026-11-16
 Owner: Kurt VanDusen

@@ -62,9 +62,12 @@
     brain's <code>config.json</code> — same section. There is no Settings
     screen for embeddings; this is the one setting done in a file.<br>
     If you change it later, the app re-embeds automatically
-    (<code>ct ingest --yes</code> forces it). Until the embedder is
-    calibrated, the automatic facts from step 6 stay off — step 6
-    explains.</li>
+    (<code>ct ingest --yes</code> forces it). New brains start
+    <em>uncalibrated</em>: the automatic fact delivery in step 6 only
+    speaks up once the embedder has a quality baseline for your content.
+    That calibration happens on its own as the brain fills up — you
+    don't run anything. Until then, corrections you approve always
+    flow.</li>
     <li>Choose who writes summary pages. Open <strong>Settings →
     Models</strong>, under <strong>AI Generation</strong>. In Strict, pick
     <strong>Auto-Install</strong>: a small model is downloaded to your
@@ -72,7 +75,9 @@
     Ollama (<code>http://localhost:11434/v1</code>) or a cloud
     OpenAI-compatible API — switch to Ephemeral first (Strict keeps the
     form disabled), then fill in External base URL, API key (optional) and
-    Model name, and Save.</li>
+    Model name, and Save. Note: this model writes Curated Thoughts' own
+    summary pages — it is not the model behind your agent; Hermes keeps
+    its own model settings.</li>
     <li>If you picked a cloud embedding key, make it reach the sidecar.
     Hermes launches the sidecar with a few environment variables, plus the
     <code>env:</code> lines in its config entry (step 5's installer writes
