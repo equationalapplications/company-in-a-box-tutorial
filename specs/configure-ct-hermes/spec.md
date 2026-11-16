@@ -4,8 +4,10 @@ Status: Implemented, Tier-3 review converged 2026-11-16 (expansion rounds
 1–4: PASS WITH MAJORS → REQUEST CHANGES → APPROVE-pending-wording →
 APPROVE; all findings folded or adjudicated with cites). Implemented
 2026-11-16 in `4266abe`…`72c6510` (the four build commits), plus review
-folds `1d0ec80` onward on this branch. Write-time checks resolved — see
-"Write-time check resolutions" below.
+folds `1d0ec80` onward on this branch. Post-convergence: target-state
+publication change (110dda4) and its spec alignment — delta-reviewed on
+branch. Write-time checks resolved — see "Write-time check resolutions"
+below.
 
 Owner ruling — target-state publication (Kurt, 2026-11-16, in-thread msg
 1571898766007734333): "We continue to publish this tutorial as if those
@@ -17,8 +19,12 @@ only the mechanism (confident-match gate) and the verbose log's
 `gate_uncalibrated` reason remain, phrased as forward-looking. This is a
 deliberate owner decision that outranks the integrations README's
 current known-limits wording; the CT fixes are tracked in #355/#356 and
-this page's calibration/expectation text should be re-checked against
-them when they land.
+the calibration/expectation text must be re-checked against them when
+they land — targets: `site/check-it-works.html` steps 2 and 4, and
+`site/models-privacy.html` step 2. #355 needs no tutorial change: the
+pages already teach the accurate split (Strict governs generation and
+the cloud bridge; embeddings are their own setting) and stay correct
+whichever way the card is reworded.
 
 Date: 2026-11-16
 Owner: Kurt VanDusen
@@ -34,9 +40,10 @@ the journey is compressed: installing Curated Thoughts jumps straight from
 (step 3 of the real setup), and "check that memory works" is buried as the
 tail of the integration-install page. New users also get one over-promise:
 that remembered facts "start showing up on their own" — which the
-integrations' known limits do not support unconditionally (matching needs a
-calibrated embedder and rarely fires on real messages yet; corrections
-always flow).
+integrations' known limits (as of 2026-11-16) do not support
+unconditionally. **Superseded by the owner ruling (above): the tutorial
+publishes target-state behavior and teaches automatic delivery as
+working, with the CT fixes tracked in #355/#356.**
 
 This change restructures the site from 13 to 15 pages and from 7 to 9
 numbered steps:
@@ -150,11 +157,10 @@ drawing showing the nesting of `mcp_servers.curated-thoughts` and
    `0 FAIL, 1 WARN, 9 PASS` with the WARN being the expected
    embedding-backend hint; PASS/WARN/FAIL and exit codes 0/1/2; the
    `sidecar-env` sentence moved.
-2. **Restart Hermes** — moved text, with the over-promise softened to the
-   known limits (matching needs a calibrated embedder and rarely fires on
-   real messages yet; corrections always flow).
+2. **Restart Hermes** — moved text; teaches automatic delivery per the
+   owner ruling (target-state publication, above).
 3. **Ask something only your vault knows** (a document approved in step 2).
-4. **Know what to expect, and turn on verbose mode** — `CT_WISDOM_VERBOSE=1`,
+4. **Know what's happening under the hood, and turn on verbose mode** — `CT_WISDOM_VERBOSE=1`,
    `ct_wisdom_log.py --host hermes -n 5`, log at
    `~/.hermes/logs/ct-wisdom-verbose.jsonl`; reasons `no_match`, `deduped`,
    `gate_uncalibrated`.
@@ -219,9 +225,9 @@ corrected to "speaks up when it finds a confident match".
 - **Accuracy over plausibility:** every wizard screen, settings tab,
   privacy-mode behavior, release asset and command in this spec was checked
   against the CT source, its README, and live runs; the one thing the app's
-  UI misstates (Strict card wording) is described truthfully without
-  contradicting it, and the over-promise about automatic facts is softened
-  to the integrations' documented limits.
+  UI misstates (Strict card wording, #355) is described truthfully without
+  contradicting it. Automatic-fact delivery is taught as working per the
+  owner ruling (target-state publication; CT fixes tracked in #356).
 - **Plain language:** embedding, doctor, PASS/WARN/FAIL, Intuitive Wisdom,
   verbose mode are defined in ordinary words at first use.
 - **No JS, attribution:** unchanged; headers/footers copied byte-for-byte.
