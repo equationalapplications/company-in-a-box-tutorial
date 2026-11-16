@@ -1,6 +1,8 @@
 # Spec — configure-ct-hermes: expanding the tutorial to 15 pages
 
-Status: Implemented, Tier-3 review converged 2026-11-16 (expansion rounds
+Status: MERGED 2026-11-16 (PR #3, merge commit e2b2022; live at 15 pages,
+all URLs verified 200, boundary 404 asserted). Previously: Tier-3 review
+converged 2026-11-16 (expansion rounds
 1–4: PASS WITH MAJORS → REQUEST CHANGES → APPROVE-pending-wording →
 APPROVE; all findings folded or adjudicated with cites). Implemented
 2026-11-16 in `4266abe`…`72c6510` (the four build commits), plus review
