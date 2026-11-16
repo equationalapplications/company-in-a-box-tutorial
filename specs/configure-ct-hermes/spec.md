@@ -1,9 +1,11 @@
 # Spec — configure-ct-hermes: expanding the tutorial to 15 pages
 
-Status: Implemented, in review (implemented 2026-11-16 in `4266abe`…`1d0ec80`
-— the four build commits — plus review folds, latest on branch;
-write-time checks resolved — see "Write-time check resolutions" below;
-sign-off pending review convergence).
+Status: Implemented, Tier-3 review converged 2026-11-16 (expansion rounds
+1–4: PASS WITH MAJORS → REQUEST CHANGES → APPROVE-pending-wording →
+APPROVE; all findings folded or adjudicated with cites). Implemented
+2026-11-16 in `4266abe`…`72c6510` (the four build commits), plus review
+folds `1d0ec80` onward on this branch. Write-time checks resolved — see
+"Write-time check resolutions" below.
 
 Date: 2026-11-16
 Owner: Kurt VanDusen
