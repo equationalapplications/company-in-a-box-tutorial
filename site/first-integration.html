@@ -33,17 +33,62 @@
   without the agent having to remember to ask.</p>
 
   <ol class="steps">
-    <li>Get the Hermes integration: go to the
+    <li>Download and unpack the release. A release is a packaged snapshot
+    of the plugin, ready to download. Go to the
     <a href="https://github.com/equationalapplications/curated-thoughts-integrations/releases?q=hermes">releases
-    page for the Hermes integration</a> and grab the latest
-    <code>hermes-v…</code> release.</li>
-    <li>Install it and run its doctor script — it checks the sidecar, the
-    brain, the vault, and the registration, and tells you exactly what to fix
-    if anything is off.</li>
-    <li>Restart Hermes. You'll know it worked when remembered facts start
-    showing up in conversations on their own: at session start you get a
-    short recall of relevant procedures and facts, and on each message the
-    integration matches relevant memory to what you just asked.</li>
+    page for the Hermes integration</a> and pick the newest release whose
+    tag starts with <code>hermes-v</code> — download its
+    <code>hermes-&lt;version&gt;.tar.gz</code> asset. The version number
+    will be higher than the examples here by the time you read this; that
+    is fine, the newest <code>hermes-v…</code> release is always the right
+    pick. Don't grab the <code>deepseek-v…</code> or <code>opencode-v…</code>
+    releases sitting next to it — those are for other harnesses. A
+    <code>.tar.gz</code> file (a tarball) is a zipped folder; unpack it in
+    a terminal:<br>
+    <pre><code>tar xzf hermes-0.7.2.tar.gz</code></pre>
+    (<code>0.7.2</code> is an example — use the name of the file you
+    downloaded.) You now have a <code>hermes-0.7.2/</code> folder; your
+    version number replaces <code>0.7.2</code> in every command below.</li>
+    <li>Run the installer, then the doctor. The installer (a plugin is an
+    add-on that Hermes loads) copies everything into place under
+    <code>~/.hermes/plugins/curated-thoughts/</code>. It is safe to run
+    again any time and needs no administrator rights:<br>
+    <pre><code>bash hermes-0.7.2/scripts/install.sh</code></pre>
+    If the installer prints a config block, do exactly what its own message
+    says about where the block goes. It prints two different cases:
+    <ul>
+      <li>“No <code>mcp_servers:</code> section found. Add the following
+      to <code>~/.hermes/config.yaml</code>” — paste the block at the top
+      level of the file, exactly as printed, keeping its indentation. This
+      is the case you get if you skipped the step 3 hand-edit.</li>
+      <li>“An <code>mcp_servers:</code> section exists but has no
+      <code>curated-thoughts</code> key” — paste the block <em>inside</em>
+      that existing section, one indent level deeper. Pasting it at the
+      bottom of the file would corrupt the config.</li>
+    </ul>
+    Either way the installer never overwrites an existing entry, and it
+    also gives you the <code>plugins.enabled</code> entry that switches
+    the plugin on. Then run the doctor — it checks each layer and tells
+    you exactly what to fix:<br>
+    <pre><code>python3 ~/.hermes/plugins/curated-thoughts/scripts/ct_doctor.py check</code></pre>
+    What you should see: one line per check — the sidecar (the helper
+    program that serves your memory), the brain (its live database), the
+    vault (your files of durable facts), and the registration (the config
+    entry that lets Hermes find the sidecar) — most lines saying
+    <code>PASS</code>, then a tally like <code>0 FAIL, 1 WARN, 9 PASS</code>.
+    <code>0 FAIL</code> is the goal. <code>WARN</code> means that layer
+    works but a feature is degraded — the line's <code>fix:</code> hint
+    says exactly what to do. <code>FAIL</code> means stop, do what the
+    line says, and run the doctor again.</li>
+    <li>Restart Hermes and watch memory show up on its own. Quit and
+    reopen Hermes so it loads the plugin. You'll know it worked when
+    remembered facts start showing up in conversations on their own: at
+    session start you get a short recall of relevant procedures and facts,
+    and on each message the integration matches relevant memory to what
+    you just asked. If nothing shows up: re-run the doctor, make sure
+    <code>plugins.enabled</code> lists <code>curated-thoughts</code>, and
+    make sure Curated Thoughts itself is version 3.3.0 or newer — older
+    versions can't deliver live facts.</li>
   </ol>
 
   <figure>
