@@ -1,5 +1,8 @@
 # Spec — first-integration page: teach each install step in detail
 
+> Superseded in scope by `specs/configure-ct-hermes/spec.md` (expansion):
+> this delivery's page is now one page of the 15-page restructure.
+
 Status: In Tier-3 review (2026-11-16) — rounds 5, 6, and 7 all returned
 PASS WITH MINORS (0 blockers, 0 majors); round-7 minors folded in this
 commit. Expansion planning (per Kurt's 2026-11-16 directive) runs in
