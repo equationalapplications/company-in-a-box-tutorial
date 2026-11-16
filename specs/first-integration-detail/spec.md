@@ -1,7 +1,7 @@
 # Spec — first-integration page: teach each install step in detail
 
-Status: In Tier-3 review (2026-11-16) — round-4 delta findings folded in
-this commit, round-5 delta pending.
+Status: In Tier-3 review (2026-11-16) — round-5 delta returned PASS WITH
+MINORS; its five minors folded in this commit, closing delta round pending.
 
 Verification record (2026-11-16): implemented and independently reviewed
 (non-author reviewer PASS, deleg_268748ad); unit tests 24/24 OK
@@ -12,6 +12,8 @@ gitleaks clean. Gates on `cdb6a3c` (round-2 fold): tests OK, checker PASS
 offline + external, re-run after the commit. Gates on this fold: re-run
 before the round-4 delta. Round map: r1 findings → `5e2cf5e`; r2 delta →
 `cdb6a3c`; r3 delta → `12c2e3c`; r4 delta → this commit.
+Date: 2026-11-15
+Owner: Tessera
 
 Known trade-offs (adjudicated, not defects): step-2 density (r3-m1
 partial, r4-m6 rejected-with-cite — the reviewer marked it "not
@@ -20,8 +22,6 @@ required"; the mirrored nested bullets survived two review rounds and a
 few-steps rule). r3-m3 note: the page flags `env:` differences but not
 the `HERMES_CT_SIDECAR` command difference — r4-m3 fixed by adding
 "(command: line may differ)" to the page.
-Date: 2026-11-15
-Owner: Tessera
 
 ## Problem
 
@@ -125,8 +125,13 @@ release tarball and a real doctor run on 2026-11-15):
    - Dormancy consequence (installer's own words): without the `plugins`
      entry the tools work but the skills and session-start hook stay
      dormant — that is step 4's "nothing shows up" symptom.
-   - What you should see: the run ends with `== Plugin enablement ==`
-     followed by either an `OK:` line or a config block to paste.
+   - What you should see: near the end, under `== Plugin enablement ==`,
+     either an `OK:` line or a config block to paste; the run finishes
+     with `== Done ==`.
+   - Env nuance (Tier-3 r5, verified in `ct_env.py` `sidecar_env_needs`):
+     live `env:` lines can come from a non-default brain location *or* a
+     detected external embedder (`EMBED_API_KEY` first, else OpenRouter/
+     OpenAI default); the commented block is only a fallback hint.
 3. **Run the doctor.**
    - `python3 ~/.hermes/plugins/curated-thoughts/scripts/ct_doctor.py check`.
    - Plain-language definitions at first use: sidecar, brain, vault,
