@@ -1,6 +1,13 @@
 # Spec — first-integration page: teach each install step in detail
 
-Status: Implemented (2026-11-16; independent review PASS, adjudicated low finding: example tally is hedged with "like", no action)
+Status: Implemented (2026-11-16; independent review PASS; Tier-3 Opus review
+cycle in progress — round 1 findings folded, delta round pending)
+
+Verification record (2026-11-16): unit tests 24/24 OK (`/usr/bin/python3
+tools/test_check_site.py`); full checker PASS offline and with
+`--check-external` (13 manifest pages, 0 warnings); visual render checked
+in a real browser at desktop width (screenshots inspected); gitleaks clean;
+independent non-author review PASS (deleg_268748ad).
 Date: 2026-11-15
 Owner: Tessera
 
@@ -107,9 +114,12 @@ release tarball and a real doctor run on 2026-11-15):
 
 ### Constraints honored
 
-- Step-count law: the page keeps exactly 3 top-level `li` steps (checker
-  hard limit is 5; nested lists do not count). Sub-details ride inside the
-  steps as prose, `pre` blocks, and nested lists.
+- Step-count law: the page keeps 4 top-level `li` steps (checker hard
+  limit is 5; nested lists do not count). Originally specced as exactly 3;
+  Tier-3 review (2026-11-16) showed step 2 carried two actions and ~30
+  lines against INTENT's small-bites ruling, so it was split into an
+  installer step and a doctor step. Sub-details ride inside the steps as
+  prose, `pre` blocks, and nested lists.
 - No new scripts, no new external links (the releases link already exists).
 - Sample output shown on the page must use generic paths (`~`, no real home
   directory names) to pass the checker's redaction grep.
@@ -118,8 +128,8 @@ release tarball and a real doctor run on 2026-11-15):
 
 ## Files touched
 
-- `site/first-integration.html` — the three `ol.steps` list items only,
-  plus their nested detail. No other element changes.
+- `site/first-integration.html` — the `ol.steps` list items (4 after the
+  Tier-3 split) and their nested detail. No other element changes.
 
 ## Test plan
 
@@ -135,9 +145,9 @@ release tarball and a real doctor run on 2026-11-15):
 
 ## Alignment with INTENT.md
 
-- **Small bites:** still one topic, still 3 numbered steps; the added detail
-  lives inside the steps as scannable commands and one-line hints, not as
-  extra top-level steps.
+- **Small bites:** still one topic, now 4 numbered steps (inside the ≤5
+  law); the added detail lives inside the steps as scannable commands and
+  one-line hints, not as extra top-level steps beyond that.
 - **Breathing room:** `pre` blocks and short hint lines add white space, not
   density; no multi-column walls.
 - **Show, don't prose:** the existing SVG figure stays; the new material is

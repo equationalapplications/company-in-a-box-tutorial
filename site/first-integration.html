@@ -49,32 +49,43 @@
     (<code>0.7.2</code> is an example — use the name of the file you
     downloaded.) You now have a <code>hermes-0.7.2/</code> folder; your
     version number replaces <code>0.7.2</code> in every command below.</li>
-    <li>Run the installer, then the doctor. The installer (a plugin is an
-    add-on that Hermes loads) copies everything into place under
+    <li>Run the installer. A plugin is an add-on that Hermes loads; the
+    installer copies everything into place under
     <code>~/.hermes/plugins/curated-thoughts/</code>. It is safe to run
     again any time and needs no administrator rights:<br>
     <pre><code>bash hermes-0.7.2/scripts/install.sh</code></pre>
     If the installer prints a config block, do exactly what its own message
-    says about where the block goes. It prints two different cases:
+    says about where the block goes. For the <code>mcp_servers</code> block
+    it prints two different cases:
     <ul>
       <li>“No <code>mcp_servers:</code> section found. Add the following
       to <code>~/.hermes/config.yaml</code>” — paste the block at the top
-      level of the file, exactly as printed, keeping its indentation. This
-      is the case you get if you skipped the step 3 hand-edit.</li>
+      level of the file, exactly as printed, keeping its indentation. You
+      usually get this case if you skipped the step 3 hand-edit.</li>
       <li>“An <code>mcp_servers:</code> section exists but has no
-      <code>curated-thoughts</code> key” — paste the block <em>inside</em>
+      <code>curated-thoughts</code> key. Insert the following block INSIDE
+      that section (indent one level)” — paste the block <em>inside</em>
       that existing section, one indent level deeper. Pasting it at the
       bottom of the file would corrupt the config.</li>
     </ul>
-    Either way the installer never overwrites an existing entry, and it
-    also gives you the <code>plugins.enabled</code> entry that switches
-    the plugin on. Then run the doctor — it checks each layer and tells
-    you exactly what to fix:<br>
+    The installer may also print a <code>plugins:</code> block, which is
+    what switches the integration on. Same rule — follow its message: if
+    there is no <code>plugins:</code> section yet, the whole block goes in
+    at the top level; if it says a <code>plugins:</code> section exists but
+    does not list <code>curated-thoughts</code>, add just the
+    <code>- curated-thoughts</code> line under <code>enabled:</code> inside
+    that section (create <code>enabled:</code> if it isn't there yet).
+    Without that entry the memory tools still work, but the integration's
+    skills and session-start recall stay switched off. Nothing you already
+    have is ever overwritten.</li>
+    <li>Run the doctor. It checks each layer and tells you exactly what to
+    fix:<br>
     <pre><code>python3 ~/.hermes/plugins/curated-thoughts/scripts/ct_doctor.py check</code></pre>
     What you should see: one line per check — the sidecar (the helper
     program that serves your memory), the brain (its live database), the
-    vault (your files of durable facts), and the registration (the config
-    entry that lets Hermes find the sidecar) — most lines saying
+    vault (your files of durable facts), the registration (the config
+    entry that lets Hermes find the sidecar), plus a few more checks
+    (import pre-flight, version compatibility) — most lines saying
     <code>PASS</code>, then a tally like <code>0 FAIL, 1 WARN, 9 PASS</code>.
     <code>0 FAIL</code> is the goal. <code>WARN</code> means that layer
     works but a feature is degraded — the line's <code>fix:</code> hint
