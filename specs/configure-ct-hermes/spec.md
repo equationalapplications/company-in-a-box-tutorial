@@ -6,8 +6,8 @@ APPROVE; all findings folded or adjudicated with cites). Implemented
 2026-11-16 in `4266abe`…`72c6510` (the four build commits), plus review
 folds `1d0ec80` onward on this branch. Post-convergence: target-state
 publication change (110dda4) and its spec alignment — delta-reviewed on
-branch. Write-time checks resolved — see "Write-time check resolutions"
-below.
+branch: APPROVE (expansion round 6). Write-time checks resolved — see
+"Write-time check resolutions" below.
 
 Owner ruling — target-state publication (Kurt, 2026-11-16, in-thread msg
 1571898766007734333): "We continue to publish this tutorial as if those
@@ -160,7 +160,8 @@ drawing showing the nesting of `mcp_servers.curated-thoughts` and
 2. **Restart Hermes** — moved text; teaches automatic delivery per the
    owner ruling (target-state publication, above).
 3. **Ask something only your vault knows** (a document approved in step 2).
-4. **Know what's happening under the hood, and turn on verbose mode** — `CT_WISDOM_VERBOSE=1`,
+4. **Know what's happening under the hood, and turn on verbose mode** —
+   `CT_WISDOM_VERBOSE=1`,
    `ct_wisdom_log.py --host hermes -n 5`, log at
    `~/.hermes/logs/ct-wisdom-verbose.jsonl`; reasons `no_match`, `deduped`,
    `gate_uncalibrated`.
@@ -224,7 +225,8 @@ corrected to "speaks up when it finds a confident match".
   setup-memory diagram gains a label rather than prose.
 - **Accuracy over plausibility:** every wizard screen, settings tab,
   privacy-mode behavior, release asset and command in this spec was checked
-  against the CT source, its README, and live runs; the one thing the app's
+  against the CT source, its README, and live runs (except where the owner
+  ruling publishes target state); the one thing the app's
   UI misstates (Strict card wording, #355) is described truthfully without
   contradicting it. Automatic-fact delivery is taught as working per the
   owner ruling (target-state publication; CT fixes tracked in #356).
