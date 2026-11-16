@@ -144,6 +144,23 @@ release tarball and a real doctor run on 2026-11-15):
      sidecar's plain text search (title/body/tags LIKE) works without
      embeddings entirely. CT configures no LLM — the agent harness is
      the LLM. Page must mention the fallback in one sentence.
+   - Privacy aside (Kurt ruling 2026-11-16, in-thread: "Tell the user
+     about the privacy modes, the option for local or cloud API for LLM,
+     the local or cloud config for embedding, does it work with no
+     embedding configured"): one extra `.aside` box added after the SVG
+     figure, before the other-harnesses aside. Ground truth: three
+     privacy modes — Strict (default; `privacy/mod.rs`
+     `effective_mode` = `unwrap_or(Strict)`; `enforce.rs`: Strict
+     allows neither cloud bridge nor external generation), Ephemeral
+     (external generation yes, cloud bridge no), Connected (both).
+     Embeddings local by default (README §Offline-First: local Ollama
+     for the vault pipeline, local Fastembed for wiki-side); external
+     endpoints only where configured (README BYOI: local Ollama/Llama
+     for full offline privacy or external OpenAI-compatible APIs).
+     No-embedding behavior per the doctor's WARN-only check (above).
+     This widens the spec's "nothing else on the page changes" scope:
+     the new aside is the only addition; lead, layers paragraph, figure,
+     other-harnesses aside, next-page links, footer untouched.
    - Env nuance (Tier-3 r5/r6, verified in `ct_env.py`
      `sidecar_env_needs`): live `env:` lines can come from a non-default
      brain location, a detected external embedder (`EMBED_API_KEY` first,
