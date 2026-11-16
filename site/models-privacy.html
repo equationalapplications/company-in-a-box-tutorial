@@ -64,10 +64,13 @@
     If you change it later, the app re-embeds automatically
     (<code>ct ingest --yes</code> forces it). New brains start
     <em>uncalibrated</em>: the automatic fact delivery in step 6 only
-    speaks up once the embedder has a quality baseline for your content.
-    That calibration happens on its own as the brain fills up — you
-    don't run anything. Until then, corrections you approve always
-    flow.</li>
+    speaks up for embedding models Curated Thoughts has calibrated.
+    Calibration ships with Curated Thoughts itself — today only the
+    cloud model <code>qwen/qwen3-embedding-4b</code> has it, so on the
+    default local setup, expect the automatic facts to stay quiet for
+    now. Corrections you approve always flow, and search and recall work
+    regardless. Nothing for you to run — Curated Thoughts updates
+    calibrate more models over time.</li>
     <li>Choose who writes summary pages. Open <strong>Settings →
     Models</strong>, under <strong>AI Generation</strong>. In Strict, pick
     <strong>Auto-Install</strong>: a small model is downloaded to your
