@@ -7,6 +7,19 @@ APPROVE; all findings folded or adjudicated with cites). Implemented
 folds `1d0ec80` onward on this branch. Write-time checks resolved — see
 "Write-time check resolutions" below.
 
+Owner ruling — target-state publication (Kurt, 2026-11-16, in-thread msg
+1571898766007734333): "We continue to publish this tutorial as if those
+issues are already fixed" (CT issues #355 Strict-card wording, #356
+local-embedder calibration coverage). The pages therefore teach Wisdom
+delivery as working on every embedder option, without the
+today-state caveats (uncalibrated abstention, rarity on real messages);
+only the mechanism (confident-match gate) and the verbose log's
+`gate_uncalibrated` reason remain, phrased as forward-looking. This is a
+deliberate owner decision that outranks the integrations README's
+current known-limits wording; the CT fixes are tracked in #355/#356 and
+this page's calibration/expectation text should be re-checked against
+them when they land.
+
 Date: 2026-11-16
 Owner: Kurt VanDusen
 Supersedes (in scope): `specs/first-integration-detail/spec.md` — that

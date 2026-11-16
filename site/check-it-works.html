@@ -45,10 +45,8 @@
     reopen Hermes, then start a fresh session: you should get a short
     recall of relevant procedures and facts. On each message, the
     integration's <span class="term">Intuitive Wisdom</span> may add a
-    remembered fact — when it finds a confident match. Today that is
-    rare — step 4 below explains why (calibration itself is covered on
-    the step 3 page, <a href="models-privacy.html">models and
-    privacy</a>). Corrections you approve always flow. If nothing shows
+    remembered fact on its own — when a message touches something your
+    memory knows. Corrections you approve always flow. If nothing shows
     up at all: re-run the doctor, make sure <code>plugins.enabled</code>
     lists <code>curated-thoughts</code>, and make sure Curated Thoughts
     itself is version 3.3.0 or newer — older versions can't deliver live
@@ -58,18 +56,17 @@
     for what I said about X". If it comes back with your fact, the whole
     pipe — vault to brain to sidecar to agent — works, apart from
     automatic delivery.</li>
-    <li>Know what to expect, and turn on verbose mode to see why. Facts
-    arriving on their own is the newest part of the integration: models
-    without a shipped calibration send no facts at all, and even
-    calibrated ones rarely fire on real messages yet. Verbose mode shows
-    you which: run Hermes with <code>CT_WISDOM_VERBOSE=1</code> set, then
+    <li>Know what's happening under the hood, and turn on verbose mode to
+    see it. When a message touches something your memory knows, the fact
+    arrives on its own — without you asking. Verbose mode shows every
+    decision: run Hermes with <code>CT_WISDOM_VERBOSE=1</code> set, then
     read the log:<br>
     <pre><code>python3 ~/.hermes/plugins/curated-thoughts/scripts/ct_wisdom_log.py --host hermes -n 5</code></pre>
     The log lives at <code>~/.hermes/logs/ct-wisdom-verbose.jsonl</code>.
     The reasons, in plain words: <code>no_match</code> (nothing in memory
     matched the message), <code>deduped</code> (a match was found but had
-    already been shown), <code>gate_uncalibrated</code> (no calibrated
-    floor exists for this embedder yet, so nothing is sent).</li>
+    already been shown), <code>gate_uncalibrated</code> (this embedder
+    isn't calibrated yet — a Curated Thoughts update extends coverage).</li>
   </ol>
 
   <div class="aside">
