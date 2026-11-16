@@ -1,13 +1,17 @@
 # Spec — first-integration page: teach each install step in detail
 
-Status: Implemented (2026-11-16; independent review PASS; Tier-3 Opus review
-cycle in progress — round 1 findings folded, delta round pending)
+Status: In Tier-3 review (2026-11-16). Round 1 findings folded in `5e2cf5e`;
+round-2 delta returned REQUEST CHANGES — its findings are folded in this
+commit; delta round 3 pending. Implemented (2026-11-16); independent
+non-author review PASS.
 
 Verification record (2026-11-16): unit tests 24/24 OK (`/usr/bin/python3
 tools/test_check_site.py`); full checker PASS offline and with
 `--check-external` (13 manifest pages, 0 warnings); visual render checked
 in a real browser at desktop width (screenshots inspected); gitleaks clean;
-independent non-author review PASS (deleg_268748ad).
+independent non-author review PASS (deleg_268748ad). Gates re-run and green
+after the round-1 fold (`5e2cf5e`); re-run again after this fold before the
+next delta round.
 Date: 2026-11-15
 Owner: Tessera
 
@@ -56,8 +60,9 @@ Evidence:
 
 ## Proposed change
 
-Rewrite the three numbered steps on `site/first-integration.html` into three
-fully taught steps. Each step gets: one or two sentences of context (what
+Rebuild the numbered steps on `site/first-integration.html` into four
+fully taught steps (the original three, with the installer and doctor
+split after Tier-3 review). Each step gets: one or two sentences of context (what
 this step does and why), the exact commands in `pre`/`code` blocks, a
 "What you should see" line describing real output shape, and a short hint
 for the most likely hiccup. Nothing else on the page changes: the lead, the
@@ -78,33 +83,43 @@ release tarball and a real doctor run on 2026-11-15):
      grab those.
    - Unpack with `tar xzf hermes-0.7.2.tar.gz` (example version; use the
      name you downloaded). You get a `hermes-0.7.2/` folder.
-2. **Run the installer, then the doctor.**
-   - `bash hermes-0.7.2/scripts/install.sh` — copies the plugin into
-     `~/.hermes/plugins/curated-thoughts/`, safe to run again any time, no
-     administrator rights needed.
-   - If the installer prints a config block, do exactly what its own
-     message says about placement — `install.sh` prints two different
-     cases (verified in the script, 2026-11-16): no `mcp_servers:` section
-     yet → "Add the following to ~/.hermes/config.yaml", and the block
-     goes in at the top level of the file, exactly as printed; an
-     `mcp_servers:` section that lacks the `curated-thoughts` key →
-     "Insert the following block INSIDE that section (indent one level)",
-     so the block must be nested under the existing `mcp_servers:` line,
-     not pasted at the bottom of the file (a top-level paste there would
-     corrupt the YAML). Readers who skipped step 3 get the first case.
-     Everyone gets the `plugins.enabled` entry that switches the plugin
-     on. It never overwrites an existing entry. The page must teach both
-     cases in plain words — YAML placement mistakes are the classic
-     beginner trap here (Gemini review note, 2026-11-16).
+2. **Run the installer.**
+   - `bash hermes-0.7.2/scripts/install.sh` — copies the plugin (an
+     add-on Hermes loads) into `~/.hermes/plugins/curated-thoughts/`,
+     safe to run again any time, no administrator rights needed.
+   - If the installer prints a config block, follow its own placement
+     message and match it to what the reader's file shows. `install.sh`
+     prints two blocks, each with two cases (verified in the script,
+     2026-11-16): an `mcp_servers` block ("No 'mcp_servers:' section
+     found" → paste the whole block at the top level, exactly as printed
+     — usually the case for readers who skipped step 3's hand-edit;
+     section exists without the `curated-thoughts` key → add only the
+     `curated-thoughts` entry one indent level under the existing
+     `mcp_servers:` line) and a `plugins` block ("No 'plugins:' section
+     found" → whole block at the top level; section exists without the
+     entry → add `- curated-thoughts` under `enabled:`, creating
+     `enabled:` if needed).
+   - CRITICAL (Tier-3 r2, 2026-11-16, verified in the script): in the
+     section-exists branch the installer's printed `mcp_servers` copy
+     still carries its own `mcp_servers:` header line, pre-indented —
+     pasting it whole nests the section inside itself and corrupts the
+     config. The page must teach the entry-only paste with a
+     target-shape snippet. YAML placement is the classic beginner trap
+     here (Gemini review note, 2026-11-16). The installer never
+     overwrites an existing entry.
+   - Dormancy consequence (installer's own words): without the `plugins`
+     entry the tools work but the skills and session-start hook stay
+     dormant — that is step 4's "nothing shows up" symptom.
+3. **Run the doctor.**
    - `python3 ~/.hermes/plugins/curated-thoughts/scripts/ct_doctor.py check`.
-   - Plain-language definitions at first use: plugin (an add-on Hermes
-     loads), sidecar, brain, vault, registration — the four things the
-     doctor checks, in ordinary words.
-   - What you should see: a line per check, most saying PASS, then a tally.
+   - Plain-language definitions at first use: sidecar, brain, vault,
+     registration — the four things the doctor checks, in ordinary words.
+   - What you should see: a line per check (plus import pre-flight and
+     version compatibility), most saying PASS, then a tally.
      `0 FAIL` is the goal. WARN means it works but a feature is degraded —
      the line's `fix:` hint says exactly what to do. FAIL means stop and fix
      what the line says, then re-run.
-3. **Restart Hermes and watch memory show up on its own.**
+4. **Restart Hermes and watch memory show up on its own.**
    - Quit and reopen Hermes so it loads the plugin.
    - The live signs, as today: a short recall of relevant procedures and
      facts at session start, and relevant facts appearing as you talk.
