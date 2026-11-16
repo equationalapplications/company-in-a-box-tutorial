@@ -78,15 +78,16 @@
   curated-thoughts:
     command: curated-thoughts-mcp
     args: ["--mcp"]</code></pre>
-      If the printed block includes live <code>env:</code> lines — they
-      appear when your brain lives outside its default location, or when
-      an external embedder is detected — keep all of them; the snippet
-      above leaves them out. Lines starting with <code>#</code> are just
-      a fallback hint: keep or delete them, and uncomment the pair only
-      if you use an external embedder (it names the right variable —
-      OpenRouter, else OpenAI, with <code>EMBED_API_KEY</code> overriding
-      both — and only if that variable is set). And keep whatever entries
-      are already in your section.</li>
+      If the printed block includes live <code>env:</code> lines — the
+      installer prints them when it detects a setting the sidecar needs
+      forwarded, like a brain outside its default location or an external
+      embedder — keep all of them; the snippet above leaves them out.
+      Lines starting with <code>#</code> are just a fallback hint: keep
+      or delete them. If you use an external embedder, uncomment the
+      <code>OPENROUTER_API_KEY</code> pair — renaming it to
+      <code>OPENAI_API_KEY</code> or <code>EMBED_API_KEY</code> if that
+      is the one you use — and only if that variable is set. And keep
+      whatever entries are already in your section.</li>
       <li>If it prints a <code>plugins</code> block — that is what
       switches the integration on — and says “No <code>plugins:</code>
       section found”, paste the whole block at the top level. If it says a
@@ -117,7 +118,12 @@
     <code>0 FAIL</code> is the goal. <code>WARN</code> means that layer
     works but a feature is degraded — the line's <code>fix:</code> hint
     says exactly what to do. <code>FAIL</code> means stop, do what the
-    line says, and run the doctor again. And if the installer's
+    line says, and run the doctor again. A common <code>WARN</code> is the
+    embedding-backend hint: you don't have to set up any embedding model —
+    with no embedding API key and no Ollama running, semantic search falls
+    back to the sidecar's built-in local model (slower, and it downloads
+    on first use), and plain text search of your vault works regardless.
+    And if the installer's
     <code>mcp_servers</code> section said OK but printed env names under
     it, make sure your existing entry carries those names — the
     <code>sidecar-env</code> check reports any that are missing.</li>

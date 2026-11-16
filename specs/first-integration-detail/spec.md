@@ -1,7 +1,8 @@
 # Spec — first-integration page: teach each install step in detail
 
-Status: In Tier-3 review (2026-11-16) — round-5 delta returned PASS WITH
-MINORS; its five minors folded in this commit, closing delta round pending.
+Status: In Tier-3 review (2026-11-16) — rounds 5 and 6 both returned PASS
+WITH MINORS (0 blockers, 0 majors); round-6 minors folded in this commit,
+closing confirmation round pending.
 
 Verification record (2026-11-16): implemented and independently reviewed
 (non-author reviewer PASS, deleg_268748ad); unit tests 24/24 OK
@@ -9,9 +10,14 @@ Verification record (2026-11-16): implemented and independently reviewed
 and with `--check-external` (13 manifest pages, 0 warnings); visual render
 checked in a real browser at desktop width (screenshots inspected);
 gitleaks clean. Gates on `cdb6a3c` (round-2 fold): tests OK, checker PASS
-offline + external, re-run after the commit. Gates on this fold: re-run
-before the round-4 delta. Round map: r1 findings → `5e2cf5e`; r2 delta →
-`cdb6a3c`; r3 delta → `12c2e3c`; r4 delta → this commit.
+offline + external, re-run after the commit. Round map: r1 findings → `5e2cf5e`; r2 delta →
+`cdb6a3c`; r3 delta → `12c2e3c`; r4 delta → `54d0e9c`; r5 delta →
+`39acdbb`; r6 delta → this commit. Gates per fold: tests + checker re-run
+green before each fold commit. Gates on `39acdbb` (r5 fold): tests OK,
+checker PASS with external links (1 pre-existing LICENSE-link warning,
+present on main, unrelated to this diff). Gates on this fold: green,
+pre-commit.
+
 Date: 2026-11-15
 Owner: Tessera
 
@@ -128,10 +134,23 @@ release tarball and a real doctor run on 2026-11-15):
    - What you should see: near the end, under `== Plugin enablement ==`,
      either an `OK:` line or a config block to paste; the run finishes
      with `== Done ==`.
-   - Env nuance (Tier-3 r5, verified in `ct_env.py` `sidecar_env_needs`):
-     live `env:` lines can come from a non-default brain location *or* a
-     detected external embedder (`EMBED_API_KEY` first, else OpenRouter/
-     OpenAI default); the commented block is only a fallback hint.
+   - Embedding fallback (Kurt ruling 2026-11-16, verified in
+     `ct_doctor.py` `check_embedding` — WARN-only, "never fails, since
+     local fastembed works without either" — and README §privacy): the
+     app needs no embedding setup. No API key + no Ollama → the doctor's
+     `embedding-backend` check WARNs (this is the example tally's 1
+     WARN) and semantic search falls back to the sidecar's built-in
+     local fastembed model (slower, downloads on first use); the
+     sidecar's plain text search (title/body/tags LIKE) works without
+     embeddings entirely. CT configures no LLM — the agent harness is
+     the LLM. Page must mention the fallback in one sentence.
+   - Env nuance (Tier-3 r5/r6, verified in `ct_env.py`
+     `sidecar_env_needs`): live `env:` lines can come from a non-default
+     brain location, a detected external embedder (`EMBED_API_KEY` first,
+     else OpenRouter/OpenAI default), or a non-default Ollama host; the
+     commented block is only a fallback hint naming `OPENROUTER_API_KEY`
+     (the page tells readers to rename it to the variable they actually
+     use).
 3. **Run the doctor.**
    - `python3 ~/.hermes/plugins/curated-thoughts/scripts/ct_doctor.py check`.
    - Plain-language definitions at first use: sidecar, brain, vault,
