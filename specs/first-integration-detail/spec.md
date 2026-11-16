@@ -1,6 +1,6 @@
 # Spec — first-integration page: teach each install step in detail
 
-Status: Reviewed (Kurt approved via Gemini review, 2026-11-16)
+Status: Implemented (2026-11-16; independent review PASS, adjudicated low finding: example tally is hedged with "like", no action)
 Date: 2026-11-15
 Owner: Tessera
 
