@@ -68,28 +68,37 @@
       INSIDE that section (indent one level)” — don't paste the block
       whole: the printed copy still carries its own
       <code>mcp_servers:</code> header line, and nesting that inside your
-      existing section breaks the config. Add just the entry, one indent
-      level under your existing <code>mcp_servers:</code> line, so the
-      whole section reads:<br>
+      existing section breaks the config. Copy every printed line
+      <em>except</em> that header, shifted left so
+      <code>curated-thoughts:</code> sits one indent level under your
+      existing <code>mcp_servers:</code>. Without any extra environment
+      lines, the result looks like:<br>
       <pre><code>mcp_servers:
   curated-thoughts:
     command: curated-thoughts-mcp
-    args: ["--mcp"]</code></pre></li>
+    args: ["--mcp"]</code></pre>
+      If the printed block includes <code>env:</code> lines — they appear
+      when your brain lives outside its default location or you use an
+      external embedder — keep those too; the snippet above leaves them
+      out. And keep whatever entries are already in your section.</li>
       <li>If it prints a <code>plugins</code> block — that is what
       switches the integration on — and says “No <code>plugins:</code>
       section found”, paste the whole block at the top level. If it says a
       <code>plugins:</code> section “exists but does not list
       <code>curated-thoughts</code>”, add just the one line under
       <code>enabled:</code> inside that section (create
-      <code>enabled:</code> if it isn't there), so it reads:<br>
+      <code>enabled:</code> if it isn't there), keeping whatever else is
+      already listed:<br>
       <pre><code>plugins:
   enabled:
     - curated-thoughts</code></pre></li>
     </ul>
-    If a message says the entry is already there, do nothing — the
-    installer never overwrites an entry you already have. Without the
-    <code>plugins</code> entry the memory tools still work, but the
-    integration's skills and session-start recall stay switched off.</li>
+    What you should see: the installer ends with
+    <code>== Plugin enablement ==</code> followed by either an
+    <code>OK:</code> line — nothing to do — or a block to paste. It never
+    overwrites an entry you already have. Without the <code>plugins</code>
+    entry the tools work but the integration's skills and session-start
+    recall stay switched off.</li>
     <li>Run the doctor. It checks each layer and tells you exactly what to
     fix:<br>
     <pre><code>python3 ~/.hermes/plugins/curated-thoughts/scripts/ct_doctor.py check</code></pre>

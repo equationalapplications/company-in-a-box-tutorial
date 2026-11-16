@@ -1,17 +1,17 @@
 # Spec — first-integration page: teach each install step in detail
 
-Status: In Tier-3 review (2026-11-16). Round 1 findings folded in `5e2cf5e`;
-round-2 delta returned REQUEST CHANGES — its findings are folded in this
-commit; delta round 3 pending. Implemented (2026-11-16); independent
-non-author review PASS.
+Status: In Tier-3 review (2026-11-16) — round-3 delta findings folded in
+this commit, round-4 delta pending.
 
-Verification record (2026-11-16): unit tests 24/24 OK (`/usr/bin/python3
-tools/test_check_site.py`); full checker PASS offline and with
-`--check-external` (13 manifest pages, 0 warnings); visual render checked
-in a real browser at desktop width (screenshots inspected); gitleaks clean;
-independent non-author review PASS (deleg_268748ad). Gates re-run and green
-after the round-1 fold (`5e2cf5e`); re-run again after this fold before the
-next delta round.
+Verification record (2026-11-16): implemented and independently reviewed
+(non-author reviewer PASS, deleg_268748ad); unit tests 24/24 OK
+(`/usr/bin/python3 tools/test_check_site.py`); full checker PASS offline
+and with `--check-external` (13 manifest pages, 0 warnings); visual render
+checked in a real browser at desktop width (screenshots inspected);
+gitleaks clean. Gates on `cdb6a3c` (round-2 fold): tests OK, checker PASS
+offline + external, re-run after the commit. Gates on this fold: re-run
+before the round-4 delta. Round map: r1 findings → `5e2cf5e`; r2 delta →
+`cdb6a3c`; r3 delta → this commit.
 Date: 2026-11-15
 Owner: Tessera
 
@@ -103,13 +103,21 @@ release tarball and a real doctor run on 2026-11-15):
      section-exists branch the installer's printed `mcp_servers` copy
      still carries its own `mcp_servers:` header line, pre-indented —
      pasting it whole nests the section inside itself and corrupts the
-     config. The page must teach the entry-only paste with a
-     target-shape snippet. YAML placement is the classic beginner trap
-     here (Gemini review note, 2026-11-16). The installer never
-     overwrites an existing entry.
+     config. The page must teach copying every printed line except that
+     header, shifted so `curated-thoughts:` sits one indent level under
+     the existing `mcp_servers:` line, with a target-shape snippet
+     presented as an example. The printed block can also include `env:`
+     lines (non-default brain location, external embedder) and the
+     command honors `HERMES_CT_SIDECAR` (Tier-3 r3, 2026-11-16, verified
+     in the script) — the snippet may show the no-env default but must
+     say so, and must tell readers to keep their existing entries. YAML
+     placement is the classic beginner trap here (Gemini review note,
+     2026-11-16). The installer never overwrites an existing entry.
    - Dormancy consequence (installer's own words): without the `plugins`
      entry the tools work but the skills and session-start hook stay
      dormant — that is step 4's "nothing shows up" symptom.
+   - What you should see: the run ends with `== Plugin enablement ==`
+     followed by either an `OK:` line or a config block to paste.
 3. **Run the doctor.**
    - `python3 ~/.hermes/plugins/curated-thoughts/scripts/ct_doctor.py check`.
    - Plain-language definitions at first use: sidecar, brain, vault,
